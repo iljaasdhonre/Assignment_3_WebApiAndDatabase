@@ -11,20 +11,20 @@ public class Movie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer movieId;
+    public Integer movieId;
 
-    @Column(name="movieTitle")
-    private String movieTitle;
+    @Column
+    public String movieTitle;
 
-    @Column(name="genre")
-    private String genre;
+    @Column
+    public String genre;
 
-    @Column(name="releaseYear")
-    private Integer releaseYear;
+    @Column
+    public Integer releaseYear;
 
-    @Column(name="picture")
-    private String picture;
+    @Column
+    public String picture;
 
-    @Column(name="trailer")
-    private String trailer;
+    @Column
+    public String trailer;
 }
