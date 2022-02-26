@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "franchise")
-public class Franchise {
+@Table(name = "actor")
+public class Actor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,14 +18,21 @@ public class Franchise {
     @Column(nullable = false, length = 50)
     public String name;
 
-    @Column(length = 200)
-    public String description;
+    @Column(length = 50)
+    public String alias;
 
-    @OneToMany(mappedBy = "franchise", fetch = FetchType.LAZY)
-    List<Movie> movies = new ArrayList<>();
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    public Gender gender;
+
+    @Column(length = 200)
+    public String picture;
+
+    @ManyToMany(mappedBy = "actors", fetch = FetchType.LAZY)
+    public List<Movie> movies = new ArrayList<>();
 
     @JsonGetter("movies")
-    public List<String> getMoviesList(){
+    public List<String> getMovies(){
         return movies.stream()
                 .map(movie -> {
                     return "/api/movie/" + movie.id;

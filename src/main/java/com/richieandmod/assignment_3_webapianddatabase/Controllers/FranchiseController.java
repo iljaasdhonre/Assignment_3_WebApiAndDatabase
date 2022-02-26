@@ -5,27 +5,35 @@ import com.richieandmod.assignment_3_webapianddatabase.Repositories.FranchiseRep
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/franchise")
+@RequestMapping("/api")
 public class FranchiseController {
 
     @Autowired
     FranchiseRepository franchiseRepository;
 
-    //create
-    @PostMapping("/add")
+    //create franchise and save to DB
+    @PostMapping("/franchise")
     public Franchise createFranchise(@RequestBody Franchise franchise) {
         franchise = franchiseRepository.save(franchise);
         return franchise;
     }
 
-    //get
-    @GetMapping("/{id}")
-    public Franchise getFranchise(@PathVariable Integer franchiseId) {
+    //Get franchise by id
+    @GetMapping("/franchise/{id}")
+    public Franchise getFranchise(@PathVariable Integer id) {
         Franchise franchise = null;
-        if(franchiseRepository.existsById(franchiseId)) {
-            franchise = franchiseRepository.findById(franchiseId).get();
+        if(franchiseRepository.existsById(id)) {
+            franchise = franchiseRepository.findById(id).get();
         }
         return franchise;
+    }
+
+    //Get all franchises
+    @GetMapping("/franchise/all")
+    public List<Franchise> getAllFranchises(){
+        return franchiseRepository.findAll();
     }
 }
