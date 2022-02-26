@@ -13,18 +13,18 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer movieId;
 
-    @Column
+    @Column(nullable=false, length=50)
     public String movieTitle;
 
-    @Column
+    @Column(nullable=false, length=50)
     public String genre;
 
-    @Column
+    @Column(nullable=false)
     public Integer releaseYear;
 
-    @Column
+    @Column(length=200)
     public String picture;
 
-    @Column
+    @Column(length=200)
     public String trailer;
 }

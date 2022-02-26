@@ -18,8 +18,8 @@ public class MovieController {
         return movie;
     }
 
-    @GetMapping("/movie/{id}")
-    public Movie getmovie(@PathVariable Integer movieId) {
+    @GetMapping("/movie/{movieId}")
+    public Movie getMovie(@PathVariable Integer movieId) {
         Movie movie = null;
         if(movieRepository.existsById(movieId)) {
             movie = movieRepository.findById(movieId).get();
