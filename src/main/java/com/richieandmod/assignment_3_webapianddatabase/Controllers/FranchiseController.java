@@ -39,7 +39,7 @@ public class FranchiseController {
     }
 
     //Get franchise by id
-    @GetMapping("/byId/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<CommonResponse> getFranchiseById(HttpServletRequest request, @PathVariable Integer id) {
         Command cmd = new Command(request);
 

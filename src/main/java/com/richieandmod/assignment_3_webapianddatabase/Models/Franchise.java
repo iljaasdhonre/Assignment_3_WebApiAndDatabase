@@ -3,6 +3,7 @@ package com.richieandmod.assignment_3_webapianddatabase.Models;
 import com.fasterxml.jackson.annotation.JsonGetter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,13 +23,13 @@ public class Franchise {
 
     @OneToMany
     @JoinColumn(name = "franchise_id")
-    public List<Movie> movies;
+    public List<Movie> movies = new ArrayList<>();
 
     @JsonGetter("movies")
     public List<String> getMoviesList() {
         return movies.stream()
                 .map(movie -> {
-                    return "/api/movie/" + movie.id;
+                    return "/api/movies/" + movie.id;
                 }).collect(Collectors.toList());
     }
 }

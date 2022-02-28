@@ -33,7 +33,7 @@ public class Movie {
     @Column(length = 200)
     public String trailer;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "franchise_id")
     public Franchise franchise;
 

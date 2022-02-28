@@ -39,7 +39,7 @@ public class MovieController {
     }
 
     //Get movie by id
-    @GetMapping("/byId/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<CommonResponse> getMovieById(HttpServletRequest request, @PathVariable Integer id) {
         Command cmd = new Command(request);
 
@@ -83,7 +83,7 @@ public class MovieController {
     }
 
     //Update movie and save to DB
-    @PatchMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<CommonResponse> updateMovie(HttpServletRequest request, @RequestBody Movie newMovie,
                                                       @PathVariable Integer id) {
 

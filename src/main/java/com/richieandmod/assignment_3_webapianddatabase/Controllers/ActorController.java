@@ -39,7 +39,7 @@ public class ActorController {
     }
 
     //Get actor by id
-    @GetMapping("/byId/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<CommonResponse> getActorById(HttpServletRequest request, @PathVariable Integer id) {
         Command cmd = new Command(request);
 
@@ -84,7 +84,7 @@ public class ActorController {
     }
 
     //Update existing actor
-    @PatchMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<CommonResponse> updateActor(HttpServletRequest request, @PathVariable Integer id,
                                              @RequestBody Actor newActor) {
 
