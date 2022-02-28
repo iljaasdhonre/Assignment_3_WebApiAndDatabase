@@ -5,3 +5,5 @@ INSERT INTO moviedb.public.actor (name, alias, gender) VALUES ('Vin Diesel', 'Do
 INSERT INTO moviedb.public.actor (name, alias, gender) VALUES ('Paul Walker', E'Brian O\'Connor', 'MALE');
 INSERT INTO moviedb.public.actor (name, alias, gender) VALUES ('Eva Mendes', 'Monica Fuentes', 'FEMALE');
 INSERT INTO moviedb.public.franchise(name) VALUES ('Fast and Furious');
+INSERT INTO moviedb.public.franchise(name) VALUES ('Walt Disney');
+INSERT INTO moviedb.public.franchise(name) VALUES ('Marvel');
