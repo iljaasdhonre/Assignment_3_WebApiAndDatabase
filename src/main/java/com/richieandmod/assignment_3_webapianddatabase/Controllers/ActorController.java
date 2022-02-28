@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,7 +58,7 @@ public class ActorController {
     }
 
     //Update existing actor
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<Actor> updateActor(@PathVariable Integer id,
                                              @RequestBody Actor newActor) {
         Actor actor = new Actor();
@@ -105,7 +104,7 @@ public class ActorController {
         } else {
             status = HttpStatus.NOT_FOUND;
         }
-        return new ResponseEntity<>(new Actor(), status);
+        return new ResponseEntity<>(status);
 
     }
 
