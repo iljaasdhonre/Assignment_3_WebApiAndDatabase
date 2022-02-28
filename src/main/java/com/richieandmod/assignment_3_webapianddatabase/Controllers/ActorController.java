@@ -1,13 +1,18 @@
 package com.richieandmod.assignment_3_webapianddatabase.Controllers;
 
 import com.richieandmod.assignment_3_webapianddatabase.Models.Actor;
+import com.richieandmod.assignment_3_webapianddatabase.Models.CommonResponse;
 import com.richieandmod.assignment_3_webapianddatabase.Models.Movie;
 import com.richieandmod.assignment_3_webapianddatabase.Repositories.ActorRepository;
+import com.richieandmod.assignment_3_webapianddatabase.Utilities.Command;
+import com.richieandmod.assignment_3_webapianddatabase.Utilities.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,55 +23,80 @@ public class ActorController {
     @Autowired
     private ActorRepository actorRepository;
 
-
     //Get all actors
     @GetMapping("/all")
-    public ResponseEntity<List<Actor>> getAllActors() {
-        List<Actor> actors = actorRepository.findAll();
-        HttpStatus status = HttpStatus.OK;
-        return new ResponseEntity<>(actors, status);
+    public ResponseEntity<CommonResponse> getAllActors(HttpServletRequest request) {
+        Command cmd = new Command(request);
+
+        CommonResponse commonResponse = new CommonResponse();
+        commonResponse.data = actorRepository.findAll();
+        commonResponse.message = "All actors";
+
+        HttpStatus resp = HttpStatus.OK;
+
+        cmd.setResult(resp);
+        Logger.getInstance().logCommand(cmd);
+        return new ResponseEntity<>(commonResponse, resp);
     }
 
     //Get actor by id
-    @GetMapping("/{id}")
-    public ResponseEntity<Actor> getActor(@PathVariable Integer id) {
-        Actor returnActor = new Actor();
-        HttpStatus status;
+    @GetMapping("/byId/{id}")
+    public ResponseEntity<CommonResponse> getActorById(HttpServletRequest request, @PathVariable Integer id) {
+        Command cmd = new Command(request);
+
+        CommonResponse commonResponse = new CommonResponse();
+        HttpStatus resp;
 
         if (actorRepository.existsById(id)) {
-            status = HttpStatus.OK;
-            returnActor = actorRepository.findById(id).get();
+            commonResponse.data = actorRepository.findById(id);
+            commonResponse.message = "Actor with id: " + id;
+            resp = HttpStatus.OK;
         } else {
-            status = HttpStatus.NOT_FOUND;
+            commonResponse.data = null;
+            commonResponse.message = "Actor not found";
+            resp = HttpStatus.NOT_FOUND;
         }
-        return new ResponseEntity<>(returnActor, status);
+
+        cmd.setResult(resp);
+        Logger.getInstance().logCommand(cmd);
+        return new ResponseEntity<>(commonResponse, resp);
     }
 
 
     //Create actor and save in DB
-    @PostMapping("/")
-    public ResponseEntity<Actor> createActor(@RequestBody Actor actor) {
-        HttpStatus status;
+    @PostMapping("/create")
+    public ResponseEntity<CommonResponse> createActor(HttpServletRequest request, HttpServletResponse response,
+                                                      @RequestBody Actor actor) {
+        Command cmd = new Command(request);
 
-        if (actor.id != null) {
-            status = HttpStatus.BAD_REQUEST;
-            return new ResponseEntity<>(actor, status);
-        }
-        status = HttpStatus.OK;
         actor = actorRepository.save(actor);
-        return new ResponseEntity<>(actor, status);
+
+        CommonResponse commonResponse = new CommonResponse();
+        commonResponse.data = actor;
+        commonResponse.message = "New actor created, with id: " + actor.id;
+
+        HttpStatus resp = HttpStatus.CREATED;
+
+        response.addHeader("Location", "/actor/" + actor.id);
+
+        cmd.setResult(resp);
+        Logger.getInstance().logCommand(cmd);
+        return new ResponseEntity<>(commonResponse, resp);
     }
 
     //Update existing actor
-    @PatchMapping("/{id}")
-    public ResponseEntity<Actor> updateActor(@PathVariable Integer id,
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<CommonResponse> updateActor(HttpServletRequest request, @PathVariable Integer id,
                                              @RequestBody Actor newActor) {
-        Actor actor = new Actor();
-        HttpStatus status;
+
+        Command cmd = new Command(request);
+
+        CommonResponse commonResponse = new CommonResponse();
+        HttpStatus resp;
 
         if (actorRepository.existsById(id)) {
             Optional<Actor> actorRepo = actorRepository.findById(id);
-            actor = actorRepo.get();
+            Actor actor = actorRepo.get();
 
             if (newActor.name != null) {
                 actor.name = newActor.name;
@@ -85,27 +115,41 @@ public class ActorController {
                     actor.movies.add(movie);
                 }
             }
-            status = HttpStatus.OK;
             actorRepository.save(actor);
+
+            commonResponse.data = actor;
+            commonResponse.message = "Updated actor with id: " + actor.id;
+            resp = HttpStatus.OK;
         } else {
-            status = HttpStatus.NOT_FOUND;
+            commonResponse.message = "Actor with id " + id + " not found";
+            resp = HttpStatus.NOT_FOUND;
         }
-        return new ResponseEntity<>(actor, status);
+
+        cmd.setResult(resp);
+        Logger.getInstance().logCommand(cmd);
+        return new ResponseEntity<>(commonResponse, resp);
     }
 
     //Delete actor
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Actor> deleteActor(@PathVariable Integer id) {
-        HttpStatus status;
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<CommonResponse> deleteActor(HttpServletRequest request, @PathVariable Integer id) {
+        Command cmd = new Command(request);
+
+        CommonResponse commonResponse = new CommonResponse();
+        HttpStatus resp;
 
         if (actorRepository.existsById(id)) {
             actorRepository.deleteById(id);
-            status = HttpStatus.OK;
+            commonResponse.message = "Deleted actor with id: " + id;
+            resp = HttpStatus.OK;
         } else {
-            status = HttpStatus.NOT_FOUND;
+            commonResponse.message = "Actor with id " + id + " not found";
+            resp = HttpStatus.NOT_FOUND;
         }
-        return new ResponseEntity<>(status);
 
+        cmd.setResult(resp);
+        Logger.getInstance().logCommand(cmd);
+        return new ResponseEntity<>(commonResponse, resp);
     }
 
 }

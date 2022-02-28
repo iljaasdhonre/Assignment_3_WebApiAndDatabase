@@ -1,72 +1,103 @@
 package com.richieandmod.assignment_3_webapianddatabase.Controllers;
 
 import com.richieandmod.assignment_3_webapianddatabase.Models.Actor;
+import com.richieandmod.assignment_3_webapianddatabase.Models.CommonResponse;
 import com.richieandmod.assignment_3_webapianddatabase.Models.Movie;
 import com.richieandmod.assignment_3_webapianddatabase.Repositories.MovieRepository;
+import com.richieandmod.assignment_3_webapianddatabase.Utilities.Command;
+import com.richieandmod.assignment_3_webapianddatabase.Utilities.Logger;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/movies")
 public class MovieController {
 
     @Autowired
     private MovieRepository movieRepository;
 
     //Get all movies
-    @GetMapping("/movie/all")
-    public ResponseEntity<List<Movie>> getAllMovies() {
-        List<Movie> movies = movieRepository.findAll();
-        HttpStatus status = HttpStatus.OK;
-        return new ResponseEntity<>(movies, status);
+    @GetMapping("/all")
+    public ResponseEntity<CommonResponse> getAllMovies(HttpServletRequest request) {
+        Command cmd = new Command(request);
+
+        CommonResponse commonResponse = new CommonResponse();
+        commonResponse.data = movieRepository.findAll();
+        commonResponse.message = "All movies";
+
+        HttpStatus resp = HttpStatus.OK;
+
+        cmd.setResult(resp);
+        Logger.getInstance().logCommand(cmd);
+        return new ResponseEntity<>(commonResponse, resp);
     }
 
     //Get movie by id
-    @GetMapping("/movie/{id}")
-    public ResponseEntity<Movie> getMovie(@PathVariable Integer id) {
-        Movie returnMovie = new Movie();
-        HttpStatus status;
+    @GetMapping("/byId/{id}")
+    public ResponseEntity<CommonResponse> getMovieById(HttpServletRequest request, @PathVariable Integer id) {
+        Command cmd = new Command(request);
+
+        CommonResponse commonResponse = new CommonResponse();
+        HttpStatus resp;
 
         if (movieRepository.existsById(id)) {
-            status = HttpStatus.OK;
-            returnMovie = movieRepository.findById(id).get();
+            commonResponse.data = movieRepository.findById(id);
+            commonResponse.message = "Movie with id: " + id;
+            resp = HttpStatus.OK;
         } else {
-            status = HttpStatus.NOT_FOUND;
+            commonResponse.data = null;
+            commonResponse.message = "movie not found";
+            resp = HttpStatus.NOT_FOUND;
         }
-        return new ResponseEntity<>(returnMovie, status);
+
+        cmd.setResult(resp);
+        Logger.getInstance().logCommand(cmd);
+        return new ResponseEntity<>(commonResponse, resp);
     }
 
     //Create movie and save to DB
-    @PostMapping("/movie")
-    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
-        HttpStatus status;
+    @PostMapping("/create")
+    public ResponseEntity<CommonResponse> createMovie(HttpServletRequest request, HttpServletResponse response,
+                                                      @RequestBody Movie movie) {
+        Command cmd = new Command(request);
 
-        if (movie.id != null) {
-            status = HttpStatus.BAD_REQUEST;
-            return new ResponseEntity<>(movie, status);
-        }
-        status = HttpStatus.OK;
         movie = movieRepository.save(movie);
-        return new ResponseEntity<>(movie, status);
+
+        CommonResponse commonResponse = new CommonResponse();
+        commonResponse.data = movie;
+        commonResponse.message = "New movie created, with id: " + movie.id;
+
+        HttpStatus resp = HttpStatus.CREATED;
+
+        response.addHeader("Location", "/movie/" + movie.id);
+
+        cmd.setResult(resp);
+        Logger.getInstance().logCommand(cmd);
+        return new ResponseEntity<>(commonResponse, resp);
     }
 
     //Update movie and save to DB
-    @PatchMapping("/movie/{id}")
-    public ResponseEntity<Movie> updateMovie(@RequestBody Movie newMovie, @PathVariable Integer id) {
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<CommonResponse> updateMovie(HttpServletRequest request, @RequestBody Movie newMovie,
+                                                      @PathVariable Integer id) {
 
-        Movie movie = new Movie();
-        HttpStatus status;
+        Command cmd = new Command(request);
+
+        CommonResponse commonResponse = new CommonResponse();
+        HttpStatus resp;
 
         if (movieRepository.existsById(id)) {
             Optional<Movie> movieRepo = movieRepository.findById(id);
-            movie = movieRepo.get();
+            Movie movie = movieRepo.get();
 
             if (newMovie.movieTitle != null) {
                 movie.movieTitle = newMovie.movieTitle;
@@ -81,27 +112,39 @@ public class MovieController {
             }
 
             movieRepository.save(movie);
-            status = HttpStatus.OK;
 
+            commonResponse.data = movie;
+            commonResponse.message = "Updated movie with id: " + movie.id;
+            resp = HttpStatus.OK;
         } else {
-            status = HttpStatus.NOT_FOUND;
+            commonResponse.message = "Movie with id " + id + " not found";
+            resp = HttpStatus.NOT_FOUND;
         }
 
-        return new ResponseEntity<>(newMovie, status);
+        cmd.setResult(resp);
+        Logger.getInstance().logCommand(cmd);
+        return new ResponseEntity<>(commonResponse, resp);
     }
 
     //Delete movie
-    @DeleteMapping("/movie/{id}")
-    public ResponseEntity<Movie> deleteBook(@PathVariable Integer id) {
-        HttpStatus status;
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<CommonResponse> deleteMovie(HttpServletRequest request, @PathVariable Integer id) {
+        Command cmd = new Command(request);
+
+        CommonResponse commonResponse = new CommonResponse();
+        HttpStatus resp;
 
         if (movieRepository.existsById(id)) {
             movieRepository.deleteById(id);
-            status = HttpStatus.OK;
+            commonResponse.message = "Deleted movie with id: " + id;
+            resp = HttpStatus.OK;
         } else {
-            status = HttpStatus.NOT_FOUND;
+            commonResponse.message = "Movie with id " + id + " not found";
+            resp = HttpStatus.NOT_FOUND;
         }
 
-        return new ResponseEntity<>(status);
+        cmd.setResult(resp);
+        Logger.getInstance().logCommand(cmd);
+        return new ResponseEntity<>(commonResponse, resp);
     }
 }

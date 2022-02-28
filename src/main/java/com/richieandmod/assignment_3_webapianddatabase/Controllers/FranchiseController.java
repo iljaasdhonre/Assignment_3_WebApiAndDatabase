@@ -1,13 +1,20 @@
 package com.richieandmod.assignment_3_webapianddatabase.Controllers;
 
+import com.richieandmod.assignment_3_webapianddatabase.Models.Actor;
+import com.richieandmod.assignment_3_webapianddatabase.Models.CommonResponse;
 import com.richieandmod.assignment_3_webapianddatabase.Models.Franchise;
 import com.richieandmod.assignment_3_webapianddatabase.Models.Movie;
 import com.richieandmod.assignment_3_webapianddatabase.Repositories.FranchiseRepository;
+import com.richieandmod.assignment_3_webapianddatabase.Utilities.Command;
+import com.richieandmod.assignment_3_webapianddatabase.Utilities.Logger;
+import com.sun.net.httpserver.HttpsConfigurator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,46 +27,76 @@ public class FranchiseController {
 
     //Get all franchises
     @GetMapping("/all")
-    public ResponseEntity<List<Franchise>> getAllFranchises() {
-        List<Franchise> franchises = franchiseRepository.findAll();
-        HttpStatus status = HttpStatus.OK;
-        return new ResponseEntity<>(franchises, status);
+    public ResponseEntity<CommonResponse> getAllFranchises(HttpServletRequest request) {
+        Command cmd = new Command(request);
+
+        CommonResponse commonResponse = new CommonResponse();
+        commonResponse.data = franchiseRepository.findAll();
+        commonResponse.message = "All franchises";
+
+        HttpStatus resp = HttpStatus.OK;
+
+        cmd.setResult(resp);
+        Logger.getInstance().logCommand(cmd);
+        return new ResponseEntity<>(commonResponse, resp);
     }
 
     //Get franchise by id
-    @GetMapping("/{id}")
-    public ResponseEntity<Franchise> getFranchise(@PathVariable Integer id) {
-        Franchise returnFranchise = new Franchise();
-        HttpStatus status;
+    @GetMapping("/byId/{id}")
+    public ResponseEntity<CommonResponse> getFranchiseById(HttpServletRequest request, @PathVariable Integer id) {
+        Command cmd = new Command(request);
+
+        CommonResponse commonResponse = new CommonResponse();
+        HttpStatus resp;
 
         if (franchiseRepository.existsById(id)) {
-            status = HttpStatus.OK;
-            returnFranchise = franchiseRepository.findById(id).get();
+            commonResponse.data = franchiseRepository.findById(id);
+            commonResponse.message = "Franchise with id: " + id;
+            resp = HttpStatus.OK;
         } else {
-            status = HttpStatus.NOT_FOUND;
+            commonResponse.data = null;
+            commonResponse.message = "Franchise not found";
+            resp = HttpStatus.NOT_FOUND;
         }
-        return new ResponseEntity<>(returnFranchise, status);
+
+        cmd.setResult(resp);
+        Logger.getInstance().logCommand(cmd);
+        return new ResponseEntity<>(commonResponse, resp);
     }
 
     //Create franchise and save to DB
-    @PostMapping("/")
-    public ResponseEntity<Franchise> createFranchise(@RequestBody Franchise franchise) {
-        HttpStatus status;
-        Franchise returnFranchise = franchiseRepository.save(franchise);
-        status = HttpStatus.CREATED;
-        return new ResponseEntity<>(returnFranchise, status);
+    @PostMapping("/create")
+    public ResponseEntity<CommonResponse> createFranchise(HttpServletRequest request, HttpServletResponse response,
+                                                     @RequestBody Franchise franchise) {
+        Command cmd = new Command(request);
+
+        franchise = franchiseRepository.save(franchise);
+
+        CommonResponse commonResponse = new CommonResponse();
+        commonResponse.data = franchise;
+        commonResponse.message = "New franchises created, with id: " + franchise.id;
+
+        HttpStatus resp = HttpStatus.CREATED;
+
+        response.addHeader("Location", "/franchises/" + franchise.id);
+
+        cmd.setResult(resp);
+        Logger.getInstance().logCommand(cmd);
+        return new ResponseEntity<>(commonResponse, resp);
     }
 
     //Update existing franchise by id
-    @PatchMapping("/{id}")
-    public ResponseEntity<Franchise> updateFranchise(@PathVariable Integer id,
+    @PutMapping("/update/{id}")
+    public ResponseEntity<CommonResponse> updateFranchise(HttpServletRequest request, @PathVariable Integer id,
                                                      @RequestBody Franchise newFranchise) {
-        Franchise franchise = new Franchise();
-        HttpStatus status;
+        Command cmd = new Command(request);
+
+        CommonResponse commonResponse = new CommonResponse();
+        HttpStatus resp;
 
         if (franchiseRepository.existsById(id)) {
             Optional<Franchise> franchiseRepo = franchiseRepository.findById(id);
-            franchise = franchiseRepo.get();
+            Franchise franchise = franchiseRepo.get();
 
             if (newFranchise.name != null) {
                 franchise.name = newFranchise.name;
@@ -72,25 +109,40 @@ public class FranchiseController {
                     franchise.movies.add(movie);
                 }
             }
-            status = HttpStatus.OK;
             franchiseRepository.save(franchise);
+
+            commonResponse.data = franchise;
+            commonResponse.message = "Updated franchise with id: " + franchise.id;
+            resp = HttpStatus.OK;
         } else {
-            status = HttpStatus.NOT_FOUND;
+            commonResponse.message = "Franchise with id " + id + " not found";
+            resp = HttpStatus.NOT_FOUND;
         }
-        return new ResponseEntity<>(franchise, status);
+
+        cmd.setResult(resp);
+        Logger.getInstance().logCommand(cmd);
+        return new ResponseEntity<>(commonResponse, resp);
     }
 
     //Delete franchise by id
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Franchise> deleteFranchise(@PathVariable Integer id) {
-        HttpStatus status;
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<CommonResponse> deleteFranchise(HttpServletRequest request, @PathVariable Integer id) {
+        Command cmd = new Command(request);
+
+        CommonResponse commonResponse = new CommonResponse();
+        HttpStatus resp;
 
         if (franchiseRepository.existsById(id)) {
             franchiseRepository.deleteById(id);
-            status = HttpStatus.OK;
+            commonResponse.message = "Deleted franchise with id: " + id;
+            resp = HttpStatus.OK;
         } else {
-            status = HttpStatus.NOT_FOUND;
+            commonResponse.message = "Franchise with id " + id + " not found";
+            resp = HttpStatus.NOT_FOUND;
         }
-        return new ResponseEntity<>(new Franchise(), status);
+
+        cmd.setResult(resp);
+        Logger.getInstance().logCommand(cmd);
+        return new ResponseEntity<>(commonResponse, resp);
     }
 }
