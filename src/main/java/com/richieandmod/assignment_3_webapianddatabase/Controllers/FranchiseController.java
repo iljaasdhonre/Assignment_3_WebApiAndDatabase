@@ -1,10 +1,8 @@
 package com.richieandmod.assignment_3_webapianddatabase.Controllers;
 
-import com.richieandmod.assignment_3_webapianddatabase.Models.Actor;
 import com.richieandmod.assignment_3_webapianddatabase.Models.Franchise;
 import com.richieandmod.assignment_3_webapianddatabase.Models.Movie;
 import com.richieandmod.assignment_3_webapianddatabase.Repositories.FranchiseRepository;
-import com.sun.net.httpserver.HttpsConfigurator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,18 +45,13 @@ public class FranchiseController {
     @PostMapping("/")
     public ResponseEntity<Franchise> createFranchise(@RequestBody Franchise franchise) {
         HttpStatus status;
-
-        if (franchise.id != null) {
-            status = HttpStatus.BAD_REQUEST;
-            return new ResponseEntity<>(franchise, status);
-        }
-        status = HttpStatus.OK;
-        franchise = franchiseRepository.save(franchise);
-        return new ResponseEntity<>(franchise, status);
+        Franchise returnFranchise = franchiseRepository.save(franchise);
+        status = HttpStatus.CREATED;
+        return new ResponseEntity<>(returnFranchise, status);
     }
 
     //Update existing franchise by id
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<Franchise> updateFranchise(@PathVariable Integer id,
                                                      @RequestBody Franchise newFranchise) {
         Franchise franchise = new Franchise();
