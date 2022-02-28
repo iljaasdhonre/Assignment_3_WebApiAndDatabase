@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import javax.persistence.Entity;
 import javax.persistence.*;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,19 +46,19 @@ public class Movie {
         }
     }
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "actor_movie",
             joinColumns = {@JoinColumn(name = "movie_id")},
             inverseJoinColumns = {@JoinColumn(name = "actor_id")}
     )
-    public List<Actor> actors;
+    public List<Actor> actors = new ArrayList<>();
 
     @JsonGetter("actors")
     public List<String> getActors() {
         return actors.stream()
                 .map(actor -> {
-                    return "/api/actor/" + actor.id;
+                    return "/api/actors/" + actor.id;
                 }).collect(Collectors.toList());
     }
 }

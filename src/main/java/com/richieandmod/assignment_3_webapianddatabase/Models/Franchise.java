@@ -22,7 +22,7 @@ public class Franchise {
     public String description;
 
     @OneToMany(mappedBy = "franchise", fetch = FetchType.LAZY)
-    List<Movie> movies = new ArrayList<>();
+    public List<Movie> movies = new ArrayList<>();
 
     @JsonGetter("movies")
     public List<String> getMoviesList(){

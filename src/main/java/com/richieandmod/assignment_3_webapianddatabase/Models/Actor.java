@@ -28,7 +28,12 @@ public class Actor {
     @Column(length = 200)
     public String picture;
 
-    @ManyToMany(mappedBy = "actors", fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "actor_movie",
+            joinColumns = {@JoinColumn(name = "actor_id")},
+            inverseJoinColumns = {@JoinColumn(name = "movie_id")}
+    )
     public List<Movie> movies = new ArrayList<>();
 
     @JsonGetter("movies")
