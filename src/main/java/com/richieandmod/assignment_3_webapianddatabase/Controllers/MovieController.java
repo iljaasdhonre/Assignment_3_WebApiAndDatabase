@@ -92,30 +92,37 @@ public class MovieController {
         CommonResponse commonResponse = new CommonResponse();
         HttpStatus resp;
 
-        if (movieRepository.existsById(id)) {
-            Optional<Movie> movieRepo = movieRepository.findById(id);
-            Movie movie = movieRepo.get();
+        if (!id.equals(movieRepository.getById(id))) {
+            resp = HttpStatus.BAD_REQUEST;
+            commonResponse.message = "You can't update de movie id";
+            return new ResponseEntity<>(commonResponse, resp);
 
-            if (newMovie.movieTitle != null) {
-                movie.movieTitle = newMovie.movieTitle;
-            }
-
-            if (newMovie.genre != null) {
-                movie.genre = newMovie.genre;
-            }
-
-            if (newMovie.releaseYear != null) {
-                movie.releaseYear = newMovie.releaseYear;
-            }
-
-            movieRepository.save(movie);
-
-            commonResponse.data = movie;
-            commonResponse.message = "Updated movie with id: " + movie.id;
-            resp = HttpStatus.OK;
         } else {
-            commonResponse.message = "Movie with id " + id + " not found";
-            resp = HttpStatus.NOT_FOUND;
+            if (movieRepository.existsById(id)) {
+                Optional<Movie> movieRepo = movieRepository.findById(id);
+                Movie movie = movieRepo.get();
+
+                if (newMovie.movieTitle != null) {
+                    movie.movieTitle = newMovie.movieTitle;
+                }
+
+                if (newMovie.genre != null) {
+                    movie.genre = newMovie.genre;
+                }
+
+                if (newMovie.releaseYear != null) {
+                    movie.releaseYear = newMovie.releaseYear;
+                }
+
+                movieRepository.save(movie);
+
+                commonResponse.data = movie;
+                commonResponse.message = "Updated movie with id: " + movie.id;
+                resp = HttpStatus.OK;
+            } else {
+                commonResponse.message = "Movie with id " + id + " not found";
+                resp = HttpStatus.NOT_FOUND;
+            }
         }
 
         cmd.setResult(resp);
