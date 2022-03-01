@@ -40,7 +40,7 @@ public class Actor {
     public List<String> getMovies(){
         return movies.stream()
                 .map(movie -> {
-                    return "/api/movies/" + movie.id;
+                    return "/api/movies/" + movie.id + ',' + movie.movieTitle;
                 }).collect(Collectors.toList());
     }
 }

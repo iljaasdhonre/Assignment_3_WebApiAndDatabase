@@ -34,13 +34,17 @@ public class Movie {
     public String trailer;
 
     @ManyToOne()
-    @JoinColumn(name = "franchise_id")
+    @JoinTable(
+            name = "franchise_movies",
+            joinColumns = {@JoinColumn(name = "movie_id")},
+            inverseJoinColumns = {@JoinColumn(name = "franchise_id")}
+    )
     public Franchise franchise;
 
     @JsonGetter("franchise")
     public String getFranchise() {
         if (franchise != null) {
-            return "/api/franchises/" + franchise.id;
+            return "/api/franchises/" + franchise.id + ',' + franchise.name;
         } else {
             return null;
         }

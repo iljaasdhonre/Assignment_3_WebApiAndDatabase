@@ -18,18 +18,17 @@ public class Franchise {
     @Column(nullable = false, length = 50)
     public String name;
 
-    @Column(length = 200)
+    @Column(length = 600)
     public String description;
 
-    @OneToMany
-    @JoinColumn(name = "franchise_id")
+    @OneToMany(mappedBy = "franchise", fetch = FetchType.LAZY)
     public List<Movie> movies = new ArrayList<>();
 
     @JsonGetter("movies")
     public List<String> getMoviesList() {
         return movies.stream()
                 .map(movie -> {
-                    return "/api/movies/" + movie.id;
+                    return "/api/movies/" + movie.id + ',' + movie.movieTitle;
                 }).collect(Collectors.toList());
     }
 }
