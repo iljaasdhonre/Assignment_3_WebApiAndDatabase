@@ -33,6 +33,7 @@ public class Movie {
     @Column(length = 200)
     public String trailer;
 
+
     @ManyToOne()
     @JoinColumn(name = "franchise_id")
     public Franchise franchise;
@@ -52,13 +53,21 @@ public class Movie {
             joinColumns = {@JoinColumn(name = "movie_id")},
             inverseJoinColumns = {@JoinColumn(name = "actor_id")}
     )
-    public List<Actor> actors = new ArrayList<>();
+    private List<Actor> actors = getActors();
 
     @JsonGetter("actors")
-    public List<String> getActors() {
+    public List<String> getActorsList() {
         return actors.stream()
                 .map(actor -> {
                     return "/api/actors/" + actor.id;
                 }).collect(Collectors.toList());
+    }
+
+    public List<Actor> getActors() {
+        return actors;
+    }
+
+    public void setActors(List<Actor> actors) {
+        this.actors = actors;
     }
 }
