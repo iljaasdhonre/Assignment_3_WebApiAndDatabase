@@ -1,5 +1,6 @@
 package com.richieandmod.assignment_3_webapianddatabase.Controllers;
 
+import com.richieandmod.assignment_3_webapianddatabase.Models.Actor;
 import com.richieandmod.assignment_3_webapianddatabase.Models.CommonResponse;
 import com.richieandmod.assignment_3_webapianddatabase.Models.Movie;
 import com.richieandmod.assignment_3_webapianddatabase.Repositories.MovieRepository;
@@ -13,7 +14,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/movies")
@@ -52,6 +56,31 @@ public class MovieController {
         if (movieRepository.existsById(id)) {
             commonResponse.data = movieRepository.findById(id);
             commonResponse.message = "Movie with id: " + id;
+            resp = HttpStatus.OK;
+        } else {
+            commonResponse.data = null;
+            commonResponse.message = "movie not found";
+            resp = HttpStatus.NOT_FOUND;
+        }
+
+        cmd.setResult(resp);
+        Logger.getInstance().logCommand(cmd);
+        return new ResponseEntity<>(commonResponse, resp);
+    }
+
+    //Get all actors in a given movie by string
+    @GetMapping("/{title}/characters")
+    public ResponseEntity<CommonResponse> getAllCharactersInMovieByTitle(HttpServletRequest request,
+                                                                         @PathVariable String title){
+        Command cmd = new Command(request);
+        CommonResponse commonResponse = new CommonResponse();
+        HttpStatus resp;
+        List<String> actorNames;
+
+        if(movieRepository.existsMovieByMovieTitle(title)){
+            actorNames = movieServiceImpl.getAllActorsInMovie(title);
+            commonResponse.data = actorNames;
+            commonResponse.message ="All actors starring in: " + title;
             resp = HttpStatus.OK;
         } else {
             commonResponse.data = null;
@@ -128,7 +157,7 @@ public class MovieController {
             //TODO: deze check is eigenlijk niet nodig
             if (movieRepository.existsById(id)) {
                 Optional<Movie> movieRepo = movieRepository.findById(id);
-                returnMovie = movieRepo.orElse(null);
+                returnMovie = movieRepo.get();
 
                 if (movie.movieTitle != null) {
                     returnMovie.movieTitle = movie.movieTitle;
