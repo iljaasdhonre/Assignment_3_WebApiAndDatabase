@@ -1,6 +1,5 @@
 package com.richieandmod.assignment_3_webapianddatabase.Controllers;
 
-import com.richieandmod.assignment_3_webapianddatabase.Models.Actor;
 import com.richieandmod.assignment_3_webapianddatabase.Models.CommonResponse;
 import com.richieandmod.assignment_3_webapianddatabase.Models.Movie;
 import com.richieandmod.assignment_3_webapianddatabase.Repositories.MovieRepository;
@@ -84,38 +83,47 @@ public class MovieController {
 
     //Update movie and save to DB
     @PutMapping("/update/{id}")
-    public ResponseEntity<CommonResponse> updateMovie(HttpServletRequest request, @RequestBody Movie newMovie,
+    public ResponseEntity<CommonResponse> updateMovie(HttpServletRequest request, @RequestBody Movie movie,
                                                       @PathVariable Integer id) {
+
+        Movie returnMovie = new Movie();
 
         Command cmd = new Command(request);
 
         CommonResponse commonResponse = new CommonResponse();
         HttpStatus resp;
 
-        if (movieRepository.existsById(id)) {
-            Optional<Movie> movieRepo = movieRepository.findById(id);
-            Movie movie = movieRepo.get();
+        if (!id.equals(movie.id)) {
+            resp = HttpStatus.BAD_REQUEST;
+            commonResponse.message = "You can't update de movie id";
+            return new ResponseEntity<>(commonResponse, resp);
+        } else
+        {
+            if (movieRepository.existsById(id)) {
+                Optional<Movie> movieRepo = movieRepository.findById(id);
+                returnMovie = movieRepo.get();
 
-            if (newMovie.movieTitle != null) {
-                movie.movieTitle = newMovie.movieTitle;
+                if (movie.movieTitle != null) {
+                    returnMovie.movieTitle = movie.movieTitle;
+                }
+
+                if (movie.genre != null) {
+                    returnMovie.genre = movie.genre;
+                }
+
+                if (movie.releaseYear != null) {
+                    returnMovie.releaseYear = movie.releaseYear;
+                }
+
+               returnMovie = movieRepository.save(returnMovie);
+
+                commonResponse.data = returnMovie;
+                commonResponse.message = "Updated movie with id: " + returnMovie.id;
+                resp = HttpStatus.OK;
+            } else {
+                commonResponse.message = "Movie with id " + id + " not found";
+                resp = HttpStatus.NOT_FOUND;
             }
-
-            if (newMovie.genre != null) {
-                movie.genre = newMovie.genre;
-            }
-
-            if (newMovie.releaseYear != null) {
-                movie.releaseYear = newMovie.releaseYear;
-            }
-
-            movieRepository.save(movie);
-
-            commonResponse.data = movie;
-            commonResponse.message = "Updated movie with id: " + movie.id;
-            resp = HttpStatus.OK;
-        } else {
-            commonResponse.message = "Movie with id " + id + " not found";
-            resp = HttpStatus.NOT_FOUND;
         }
 
         cmd.setResult(resp);
