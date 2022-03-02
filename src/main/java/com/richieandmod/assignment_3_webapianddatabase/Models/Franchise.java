@@ -1,6 +1,8 @@
 package com.richieandmod.assignment_3_webapianddatabase.Models;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ public class Franchise {
     public String description;
 
     @OneToMany(mappedBy = "franchise", fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     public List<Movie> movies = new ArrayList<>();
 
     @JsonGetter("movies")
