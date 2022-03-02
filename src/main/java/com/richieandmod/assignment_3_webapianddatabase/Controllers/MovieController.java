@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/movies")
@@ -74,13 +75,11 @@ public class MovieController {
         Command cmd = new Command(request);
         CommonResponse commonResponse = new CommonResponse();
         HttpStatus resp;
-        List<Actor> actorsInMovie = new ArrayList<>();
+        List<String> actorNames;
 
-        if(movieRepository.existsByMovieTitle(title)){
-            Optional<Movie> movieRepo = movieRepository.getMovieByMovieTitle(title);
-            Movie movie = movieRepo.get();
-            actorsInMovie = movie.getActors();
-            commonResponse.data = actorsInMovie;
+        if(movieRepository.existsMovieByMovieTitle(title)){
+            actorNames = movieServiceImpl.getAllActorsInMovie(title);
+            commonResponse.data = actorNames;
             commonResponse.message ="All actors starring in: " + title;
             resp = HttpStatus.OK;
         } else {
@@ -158,7 +157,7 @@ public class MovieController {
             //TODO: deze check is eigenlijk niet nodig
             if (movieRepository.existsById(id)) {
                 Optional<Movie> movieRepo = movieRepository.findById(id);
-                returnMovie = movieRepo.orElse(null);
+                returnMovie = movieRepo.get();
 
                 if (movie.movieTitle != null) {
                     returnMovie.movieTitle = movie.movieTitle;
