@@ -77,7 +77,9 @@ public class MovieController {
         List<Actor> actorsInMovie = new ArrayList<>();
 
         if(movieRepository.existsByMovieTitle(title)){
-            //actorsInMovie = movieRepository.findByTitle(title).getActors();
+            Optional<Movie> movieRepo = movieRepository.getMovieByMovieTitle(title);
+            Movie movie = movieRepo.get();
+            actorsInMovie = movie.getActors();
             commonResponse.data = actorsInMovie;
             commonResponse.message ="All actors starring in: " + title;
             resp = HttpStatus.OK;

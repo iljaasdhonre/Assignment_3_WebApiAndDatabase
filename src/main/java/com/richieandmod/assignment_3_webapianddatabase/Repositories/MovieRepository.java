@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface MovieRepository extends JpaRepository<Movie, Integer> {
     boolean existsByMovieTitle(String title);
+    Optional<Movie> getMovieByMovieTitle(String title);
 }
