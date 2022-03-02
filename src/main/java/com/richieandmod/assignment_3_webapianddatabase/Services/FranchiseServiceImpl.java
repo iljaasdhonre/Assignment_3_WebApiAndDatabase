@@ -46,14 +46,28 @@ public class FranchiseServiceImpl implements FranchiseService {
 
     @Override
     public List<String> getAllMoviesInFranchise(String name) {
-        List<Movie> moviesInFranchise;
+        List<Movie> moviesInFranchise = franchiseRepository.findFirstByName(name).getMovies();
         List<String> movieTitles = new ArrayList<>();
-        Franchise franchise = franchiseRepository.findFirstByName(name);
-
-        moviesInFranchise = franchise.getMovies();
         moviesInFranchise.stream().map(
                 movie -> movieTitles.add(movie.movieTitle)).collect(Collectors.toList());
 
         return movieTitles;
+    }
+
+    @Override
+    public List<String> getAllActorsInFranchise(String name) {
+        List<Movie> moviesInFranchise = franchiseRepository.findFirstByName(name).getMovies();
+        List<Actor> actorsInFranchise = new ArrayList<>();
+        List<String> actorNames = new ArrayList<>();
+
+        moviesInFranchise.stream().map(
+                movie -> actorsInFranchise.addAll(movie.getActors())
+        ).collect(Collectors.toList());
+
+        actorsInFranchise.stream().distinct().map(
+                        actor -> actorNames.add(actor.name))
+                .collect(Collectors.toList());
+
+        return actorNames;
     }
 }

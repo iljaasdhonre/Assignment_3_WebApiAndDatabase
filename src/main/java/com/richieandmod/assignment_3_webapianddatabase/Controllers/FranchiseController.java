@@ -1,5 +1,6 @@
 package com.richieandmod.assignment_3_webapianddatabase.Controllers;
 
+import com.richieandmod.assignment_3_webapianddatabase.Models.Actor;
 import com.richieandmod.assignment_3_webapianddatabase.Models.CommonResponse;
 import com.richieandmod.assignment_3_webapianddatabase.Models.Franchise;
 import com.richieandmod.assignment_3_webapianddatabase.Models.Movie;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.CookieManager;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,17 +71,40 @@ public class FranchiseController {
     //Get all movies in a franchise
     @GetMapping("/{name}/movies")
     public ResponseEntity<CommonResponse> getAllMoviesInFranchiseByTitle(HttpServletRequest request,
-                                                               @PathVariable String name) {
+                                                                         @PathVariable String name) {
         Command cmd = new Command(request);
-
         CommonResponse commonResponse = new CommonResponse();
         HttpStatus resp;
         List<String> movieNames;
 
-        if(franchiseRepository.existsFranchiseByName(name)) {
+        if (franchiseRepository.existsFranchiseByName(name)) {
             movieNames = franchiseServiceImpl.getAllMoviesInFranchise(name);
             commonResponse.data = movieNames;
             commonResponse.message = "All movies published by franchise: " + name;
+            resp = HttpStatus.OK;
+        } else {
+            commonResponse.data = null;
+            commonResponse.message = "Franchise not found";
+            resp = HttpStatus.NOT_FOUND;
+        }
+
+        cmd.setResult(resp);
+        Logger.getInstance().logCommand(cmd);
+        return new ResponseEntity<>(commonResponse, resp);
+    }
+
+    @GetMapping("/{name}/actors/all")
+    public ResponseEntity<CommonResponse> getAllActorsInFranchise(HttpServletRequest request,
+                                                                  @PathVariable String name) {
+        Command cmd = new Command(request);
+        CommonResponse commonResponse = new CommonResponse();
+        HttpStatus resp;
+        List<String> actorsInFranchise;
+
+        if (franchiseRepository.existsFranchiseByName(name)) {
+            actorsInFranchise = franchiseServiceImpl.getAllActorsInFranchise(name);
+            commonResponse.data = actorsInFranchise;
+            commonResponse.message = "All actors active at franchise: " + name;
             resp = HttpStatus.OK;
         } else {
             commonResponse.data = null;
@@ -157,9 +182,7 @@ public class FranchiseController {
                 franchise.description = newFranchise.description;
             }
             if (newFranchise.movies != null && !newFranchise.movies.isEmpty()) {
-                for (Movie movie : newFranchise.movies) {
-                    franchise.movies.add(movie);
-                }
+                franchise.movies.addAll(newFranchise.movies);
             }
             franchiseRepository.save(franchise);
 
