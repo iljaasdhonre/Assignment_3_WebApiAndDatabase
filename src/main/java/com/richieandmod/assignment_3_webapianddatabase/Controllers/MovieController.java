@@ -3,6 +3,7 @@ package com.richieandmod.assignment_3_webapianddatabase.Controllers;
 import com.richieandmod.assignment_3_webapianddatabase.Models.CommonResponse;
 import com.richieandmod.assignment_3_webapianddatabase.Models.Movie;
 import com.richieandmod.assignment_3_webapianddatabase.Repositories.MovieRepository;
+import com.richieandmod.assignment_3_webapianddatabase.Services.MovieServiceImpl;
 import com.richieandmod.assignment_3_webapianddatabase.Utilities.Command;
 import com.richieandmod.assignment_3_webapianddatabase.Utilities.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class MovieController {
 
     @Autowired
     private MovieRepository movieRepository;
+
+    @Autowired
+    private MovieServiceImpl movieServiceImpl;
 
     //Get all movies
     @GetMapping("/all")
@@ -60,6 +64,28 @@ public class MovieController {
         return new ResponseEntity<>(commonResponse, resp);
     }
 
+    //Update characters in movie
+    @PutMapping("/{id}/characters/update/")
+    public ResponseEntity<CommonResponse> updateCharactersInMovie(HttpServletRequest request,
+                                                                  @PathVariable Integer id, @RequestBody Integer [] movieId){
+        Command cmd = new Command(request);
+        CommonResponse commonResponse = new CommonResponse();
+        HttpStatus resp;
+
+        if (movieRepository.existsById(id)) {commonResponse.data = movieServiceImpl.updateActorsInMovie(id, movieId);
+            commonResponse.message = "Actors in movie with id: " + id + " have been updated";
+            resp = HttpStatus.OK;
+        } else {
+            commonResponse.data = null;
+            commonResponse.message = "movie not found";
+            resp = HttpStatus.NOT_FOUND;
+        }
+
+        cmd.setResult(resp);
+        Logger.getInstance().logCommand(cmd);
+        return new ResponseEntity<>(commonResponse, resp);
+    }
+
     //Create movie and save to DB
     @PostMapping("/create")
     public ResponseEntity<CommonResponse> createMovie(HttpServletRequest request, HttpServletResponse response,
@@ -86,7 +112,7 @@ public class MovieController {
     public ResponseEntity<CommonResponse> updateMovie(HttpServletRequest request, @RequestBody Movie movie,
                                                       @PathVariable Integer id) {
 
-        Movie returnMovie = new Movie();
+        Movie returnMovie;
 
         Command cmd = new Command(request);
 
@@ -95,13 +121,14 @@ public class MovieController {
 
         if (!id.equals(movie.id)) {
             resp = HttpStatus.BAD_REQUEST;
-            commonResponse.message = "You can't update de movie id";
+            commonResponse.message = "You can't update the movie id";
             return new ResponseEntity<>(commonResponse, resp);
         } else
         {
+            //TODO: deze check is eigenlijk niet nodig
             if (movieRepository.existsById(id)) {
                 Optional<Movie> movieRepo = movieRepository.findById(id);
-                returnMovie = movieRepo.get();
+                returnMovie = movieRepo.orElse(null);
 
                 if (movie.movieTitle != null) {
                     returnMovie.movieTitle = movie.movieTitle;

@@ -95,7 +95,7 @@ public class ActorController {
 
         if (actorRepository.existsById(id)) {
             Optional<Actor> actorRepo = actorRepository.findById(id);
-            Actor actor = actorRepo.get();
+            Actor actor = actorRepo.orElse(null);
 
             if (newActor.name != null) {
                 actor.name = newActor.name;
@@ -150,6 +150,8 @@ public class ActorController {
         Logger.getInstance().logCommand(cmd);
         return new ResponseEntity<>(commonResponse, resp);
     }
+
+
 
 }
 
