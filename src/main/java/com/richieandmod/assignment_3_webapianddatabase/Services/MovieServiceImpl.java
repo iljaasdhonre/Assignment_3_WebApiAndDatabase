@@ -14,10 +14,10 @@ import java.util.Optional;
 public class MovieServiceImpl implements MovieService {
 
     @Autowired
-    public MovieRepository movieRepository;
+    private MovieRepository movieRepository;
 
     @Autowired
-    public ActorRepository actorRepository;
+    private ActorRepository actorRepository;
 
     //Update actors in a movie with given id. If actors already exist in movie do nothing
     @Override
