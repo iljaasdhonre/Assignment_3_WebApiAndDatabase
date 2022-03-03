@@ -1,6 +1,5 @@
 package com.richieandmod.assignment_3_webapianddatabase.Controllers;
 
-import com.richieandmod.assignment_3_webapianddatabase.Models.Actor;
 import com.richieandmod.assignment_3_webapianddatabase.Models.CommonResponse;
 import com.richieandmod.assignment_3_webapianddatabase.Models.Movie;
 import com.richieandmod.assignment_3_webapianddatabase.Repositories.MovieRepository;
@@ -14,10 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/movies")
@@ -68,9 +65,9 @@ public class MovieController {
         return new ResponseEntity<>(commonResponse, resp);
     }
 
-    //Get all actors in a given movie by string
-    @GetMapping("/{title}/characters")
-    public ResponseEntity<CommonResponse> getAllCharactersInMovieByTitle(HttpServletRequest request,
+    //Get all actors in a given movie by its title
+    @GetMapping("/{title}/actors")
+    public ResponseEntity<CommonResponse> getAllActorsInMovieByTitle(HttpServletRequest request,
                                                                          @PathVariable String title){
         Command cmd = new Command(request);
         CommonResponse commonResponse = new CommonResponse();
@@ -93,15 +90,16 @@ public class MovieController {
         return new ResponseEntity<>(commonResponse, resp);
     }
 
-    //Update characters in movie
-    @PutMapping("/{id}/characters/update/")
-    public ResponseEntity<CommonResponse> updateCharactersInMovie(HttpServletRequest request,
+    //Update actors in movie, double actors are skipped
+    @PutMapping("/{id}/actors/update/")
+    public ResponseEntity<CommonResponse> updateActorsInMovie(HttpServletRequest request,
                                                                   @PathVariable Integer id, @RequestBody Integer [] movieId){
         Command cmd = new Command(request);
         CommonResponse commonResponse = new CommonResponse();
         HttpStatus resp;
 
-        if (movieRepository.existsById(id)) {commonResponse.data = movieServiceImpl.updateActorsInMovie(id, movieId);
+        if (movieRepository.existsById(id)) {
+            commonResponse.data = movieServiceImpl.updateActorsInMovie(id, movieId);
             commonResponse.message = "Actors in movie with id: " + id + " have been updated";
             resp = HttpStatus.OK;
         } else {
@@ -154,7 +152,6 @@ public class MovieController {
             return new ResponseEntity<>(commonResponse, resp);
         } else
         {
-            //TODO: deze check is eigenlijk niet nodig
             if (movieRepository.existsById(id)) {
                 Optional<Movie> movieRepo = movieRepository.findById(id);
                 returnMovie = movieRepo.get();

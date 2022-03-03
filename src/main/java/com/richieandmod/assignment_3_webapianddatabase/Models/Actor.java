@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 @Table(name = "actor")
 public class Actor {
 
+    //fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
@@ -28,6 +29,7 @@ public class Actor {
     @Column(length = 200)
     public String picture;
 
+    //relation with movie
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "actor_movie",
@@ -36,6 +38,7 @@ public class Actor {
     )
     public List<Movie> movies = new ArrayList<>();
 
+    //show relation and link to movie by id and title
     @JsonGetter("movies")
     public List<String> getMovies(){
         return movies.stream()

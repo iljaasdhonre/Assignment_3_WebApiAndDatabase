@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @Table(name = "franchise")
 public class Franchise {
 
+    //fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
@@ -23,10 +24,12 @@ public class Franchise {
     @Column(length = 600)
     public String description;
 
+    //relation with movie
     @OneToMany(mappedBy = "franchise", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     public List<Movie> movies = getMovies();
 
+    //show relation and link to movie by id and title
     @JsonGetter("movies")
     public List<String> getMoviesList() {
         return movies.stream()
@@ -35,6 +38,7 @@ public class Franchise {
                 }).collect(Collectors.toList());
     }
 
+    //getters and setters
     public List<Movie> getMovies() { return movies; }
 
     public void setMovies(List<Movie> movies) { this.movies = movies; }

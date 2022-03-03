@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 @Table(name = "movie")
 public class Movie {
 
+    //fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
@@ -35,7 +36,7 @@ public class Movie {
     @Column(length = 200)
     public String trailer;
 
-
+    //relation with franchise
     @ManyToOne()
     @JoinTable(
             name = "franchise_movies",
@@ -44,6 +45,7 @@ public class Movie {
     )
     public Franchise franchise;
 
+    //show relation and link to franchise by id and name
     @JsonGetter("franchise")
     public String getFranchise() {
         if (franchise != null) {
@@ -53,6 +55,7 @@ public class Movie {
         }
     }
 
+    //relation with actor
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "actor_movie",
@@ -61,6 +64,7 @@ public class Movie {
     )
     private List<Actor> actors = getActors();
 
+    //show relation and link to actor by id
     @JsonGetter("actors")
     public List<String> getActorsList() {
         return actors.stream()
@@ -69,6 +73,7 @@ public class Movie {
                 }).collect(Collectors.toList());
     }
 
+    //getters and setters
     public List<Actor> getActors() {
         return actors;
     }

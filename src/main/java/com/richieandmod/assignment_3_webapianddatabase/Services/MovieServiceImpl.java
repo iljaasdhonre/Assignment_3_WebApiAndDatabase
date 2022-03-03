@@ -43,6 +43,7 @@ public class MovieServiceImpl implements MovieService {
         return movie.getActors();
     }
 
+    //Get all the actors starring in a movie
     @Override
     public List<String> getAllActorsInMovie(String movieTitle) {
         List<Actor> actorsInMovie;

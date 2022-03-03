@@ -44,6 +44,7 @@ public class FranchiseServiceImpl implements FranchiseService {
         return franchise.getMovies();
     }
 
+    //Get all the movies in a franchise
     @Override
     public List<String> getAllMoviesInFranchise(String name) {
         List<Movie> moviesInFranchise = franchiseRepository.findFirstByName(name).getMovies();
@@ -54,6 +55,7 @@ public class FranchiseServiceImpl implements FranchiseService {
         return movieTitles;
     }
 
+    //Get all the actors in a franchise, leaving out the doubles
     @Override
     public List<String> getAllActorsInFranchise(String name) {
         List<Movie> moviesInFranchise = franchiseRepository.findFirstByName(name).getMovies();

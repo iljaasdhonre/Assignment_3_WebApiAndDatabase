@@ -1,9 +1,7 @@
 package com.richieandmod.assignment_3_webapianddatabase.Controllers;
 
-import com.richieandmod.assignment_3_webapianddatabase.Models.Actor;
 import com.richieandmod.assignment_3_webapianddatabase.Models.CommonResponse;
 import com.richieandmod.assignment_3_webapianddatabase.Models.Franchise;
-import com.richieandmod.assignment_3_webapianddatabase.Models.Movie;
 import com.richieandmod.assignment_3_webapianddatabase.Repositories.FranchiseRepository;
 import com.richieandmod.assignment_3_webapianddatabase.Services.FranchiseServiceImpl;
 import com.richieandmod.assignment_3_webapianddatabase.Utilities.Command;
@@ -15,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.net.CookieManager;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -68,7 +66,7 @@ public class FranchiseController {
         return new ResponseEntity<>(commonResponse, resp);
     }
 
-    //Get all movies in a franchise
+    //Get all movies in a given franchise by its name
     @GetMapping("/{name}/movies")
     public ResponseEntity<CommonResponse> getAllMoviesInFranchiseByTitle(HttpServletRequest request,
                                                                          @PathVariable String name) {
@@ -93,6 +91,7 @@ public class FranchiseController {
         return new ResponseEntity<>(commonResponse, resp);
     }
 
+    //Get all actors in a given franchise by its name
     @GetMapping("/{name}/actors/all")
     public ResponseEntity<CommonResponse> getAllActorsInFranchise(HttpServletRequest request,
                                                                   @PathVariable String name) {
@@ -118,7 +117,7 @@ public class FranchiseController {
     }
 
 
-    //Update movies in franchise
+    //Update movies in franchise by its id
     @PutMapping("/{id}/movies/update/")
     public ResponseEntity<CommonResponse> updateMoviesInFranchise(HttpServletRequest request,
                                                                   @PathVariable Integer id, @RequestBody Integer[] franchiseId) {
