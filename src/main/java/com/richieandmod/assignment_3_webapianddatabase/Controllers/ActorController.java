@@ -86,7 +86,7 @@ public class ActorController {
     //Update existing actor
     @PutMapping("/update/{id}")
     public ResponseEntity<CommonResponse> updateActor(HttpServletRequest request, @PathVariable Integer id,
-                                             @RequestBody Actor newActor) {
+                                                      @RequestBody Actor newActor) {
 
         Command cmd = new Command(request);
 
@@ -150,7 +150,6 @@ public class ActorController {
         Logger.getInstance().logCommand(cmd);
         return new ResponseEntity<>(commonResponse, resp);
     }
-
 
 
 }

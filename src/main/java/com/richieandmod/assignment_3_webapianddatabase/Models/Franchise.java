@@ -7,7 +7,6 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,7 +38,7 @@ public class Franchise {
     public List<String> getMoviesList() {
         return movies.stream()
                 .map(movie -> {
-                    return "/api/movies/" + movie.id + ',' + movie.movieTitle;
+                    return "/api/movies/" + movie.id;
                 }).collect(Collectors.toList());
     }
 
