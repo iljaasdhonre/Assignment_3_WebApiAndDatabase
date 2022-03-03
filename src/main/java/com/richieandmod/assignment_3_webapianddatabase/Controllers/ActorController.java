@@ -57,7 +57,8 @@ public class ActorController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Actor.class))}),
             @ApiResponse(responseCode = "404", description = "Actor not found",
-                    content = @Content)
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))})
     })
     @GetMapping("/{id}")
     public ResponseEntity<CommonResponse> getActorById(@Parameter(description = "id of the actor that needs to be searched")
@@ -117,7 +118,8 @@ public class ActorController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Actor.class))}),
             @ApiResponse(responseCode = "404", description = "Actor not found",
-                    content = @Content)
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))})
     })
     @PutMapping("/update/{id}")
     public ResponseEntity<CommonResponse> updateActor(@Parameter(description = "id of the actor that needs to be updated")
@@ -156,6 +158,7 @@ public class ActorController {
             commonResponse.message = "Updated actor with id: " + actor.id;
             resp = HttpStatus.OK;
         } else {
+            commonResponse.data = null;
             commonResponse.message = "Actor with id " + id + " not found";
             resp = HttpStatus.NOT_FOUND;
         }
@@ -172,7 +175,8 @@ public class ActorController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Actor.class))}),
             @ApiResponse(responseCode = "404", description = "Actor not found",
-                    content = @Content)
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))})
     })
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<CommonResponse> deleteActor(@Parameter(description = "id of the franchise that needs to be deleted")
@@ -187,6 +191,7 @@ public class ActorController {
             commonResponse.message = "Deleted actor with id: " + id;
             resp = HttpStatus.OK;
         } else {
+            commonResponse.data = null;
             commonResponse.message = "Actor with id " + id + " not found";
             resp = HttpStatus.NOT_FOUND;
         }

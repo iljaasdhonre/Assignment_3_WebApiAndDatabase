@@ -61,7 +61,8 @@ public class FranchiseController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Franchise.class))}),
             @ApiResponse(responseCode = "404", description = "Franchise not found",
-                    content = @Content)
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))})
     })
     @GetMapping("/{id}")
     public ResponseEntity<CommonResponse> getFranchiseById(@Parameter(description = "id of the franchise that needs to be searched")
@@ -93,7 +94,8 @@ public class FranchiseController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Franchise.class))}),
             @ApiResponse(responseCode = "404", description = "Franchise not found",
-                    content = @Content)
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))})
     })
     //Get all movies in a given franchise by its name
     @GetMapping("/{name}/movies")
@@ -126,7 +128,8 @@ public class FranchiseController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Franchise.class))}),
             @ApiResponse(responseCode = "404", description = "Franchise not found",
-                    content = @Content)
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))})
     })
     //Get all actors in a given franchise by its name
     @GetMapping("/{name}/actors/all")
@@ -154,16 +157,16 @@ public class FranchiseController {
     }
 
 
-    //Update movies in franchise
+    //Update movies in franchise by its id
     @Operation(summary = "Update the movies in a franchise")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "The movies have been updated",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Franchise.class))}),
             @ApiResponse(responseCode = "404", description = "Movie not found",
-                    content = @Content)
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))})
     })
-    //Update movies in franchise by its id
     @PutMapping("/{id}/movies/update")
     public ResponseEntity<CommonResponse> updateMoviesInFranchise(@Parameter(description = "id of the franchise that needs to be updated")
                                                                               HttpServletRequest request, @PathVariable Integer id,
@@ -221,7 +224,8 @@ public class FranchiseController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Franchise.class))}),
             @ApiResponse(responseCode = "404", description = "Franchise not found",
-                    content = @Content)
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))})
     })
     @PutMapping("/update/{id}")
     public ResponseEntity<CommonResponse> updateFranchise(@Parameter(description = "id of the franchise that needs to be updated")
@@ -251,6 +255,7 @@ public class FranchiseController {
             commonResponse.message = "Updated franchise with id: " + franchise.id;
             resp = HttpStatus.OK;
         } else {
+            commonResponse.data = null;
             commonResponse.message = "Franchise with id " + id + " not found";
             resp = HttpStatus.NOT_FOUND;
         }
@@ -267,7 +272,8 @@ public class FranchiseController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Franchise.class))}),
             @ApiResponse(responseCode = "404", description = "Franchise not found",
-                    content = @Content)
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))})
     })
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<CommonResponse> deleteFranchise(@Parameter(description = "id of the franchise that needs to be deleted")
@@ -282,6 +288,7 @@ public class FranchiseController {
             commonResponse.message = "Deleted franchise with id: " + id;
             resp = HttpStatus.OK;
         } else {
+            commonResponse.data = null;
             commonResponse.message = "Franchise with id " + id + " not found";
             resp = HttpStatus.NOT_FOUND;
         }

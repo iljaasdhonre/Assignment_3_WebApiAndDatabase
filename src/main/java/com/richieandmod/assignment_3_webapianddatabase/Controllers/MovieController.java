@@ -61,7 +61,8 @@ public class MovieController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Movie.class))}),
             @ApiResponse(responseCode = "404", description = "Movie not found",
-                    content = @Content)
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))})
     })
     @GetMapping("/{id}")
     public ResponseEntity<CommonResponse> getMovieById(@Parameter(description = "id of the movie that needs to be searched")
@@ -93,7 +94,8 @@ public class MovieController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Movie.class))}),
             @ApiResponse(responseCode = "404", description = "Movie not found",
-                    content = @Content)
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))})
     })
     @GetMapping("/{title}/actors")
     public ResponseEntity<CommonResponse> getAllActorsInMovieByTitle(@Parameter(description = "title of the movie that needs to be searched")
@@ -127,7 +129,8 @@ public class MovieController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Movie.class))}),
             @ApiResponse(responseCode = "404", description = "Movie not found",
-                    content = @Content)
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))})
     })
     @PutMapping("/{id}/actors/update")
     public ResponseEntity<CommonResponse> updateActorsInMovie(@Parameter(description = "id of the movie that needs to be searched")HttpServletRequest request,
@@ -185,7 +188,8 @@ public class MovieController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Movie.class))}),
             @ApiResponse(responseCode = "404", description = "Movie not found",
-                    content = @Content)
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))})
     })
     @PutMapping("/update/{id}")
     public ResponseEntity<CommonResponse> updateMovie(@Parameter(description = "id of the movie that needs to be updated")
@@ -226,6 +230,7 @@ public class MovieController {
                 commonResponse.message = "Updated movie with id: " + returnMovie.id;
                 resp = HttpStatus.OK;
             } else {
+                commonResponse.data = null;
                 commonResponse.message = "Movie with id " + id + " not found";
                 resp = HttpStatus.NOT_FOUND;
             }
@@ -243,7 +248,8 @@ public class MovieController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Movie.class))}),
             @ApiResponse(responseCode = "404", description = "Movie not found",
-                    content = @Content)
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))})
     })
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<CommonResponse> deleteMovie(@Parameter(description = "id of the movie that needs to be deleted")
@@ -258,6 +264,7 @@ public class MovieController {
             commonResponse.message = "Deleted movie with id: " + id;
             resp = HttpStatus.OK;
         } else {
+            commonResponse.data = null;
             commonResponse.message = "Movie with id " + id + " not found";
             resp = HttpStatus.NOT_FOUND;
         }
