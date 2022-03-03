@@ -86,7 +86,7 @@ public class MovieController {
         return new ResponseEntity<>(commonResponse, resp);
     }
 
-    //Get all actors in a given movie by string
+    //Get all actors in a given movie by its title
     @Operation(summary = "Get all actors in a movie by movie title")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "The following actors are starring in this movie",
@@ -95,18 +95,19 @@ public class MovieController {
             @ApiResponse(responseCode = "404", description = "Movie not found",
                     content = @Content)
     })
-    @GetMapping("/{title}/characters")
-    public ResponseEntity<CommonResponse> getAllCharactersInMovieByTitle(@Parameter(description = "Title of the movie that needs to be found")
-                                                                                 HttpServletRequest request, @PathVariable String title){
+    @GetMapping("/{title}/actors")
+    public ResponseEntity<CommonResponse> getAllActorsInMovieByTitle(@Parameter(description = "title of the movie that needs to be searched")
+                                                                                 HttpServletRequest request,
+                                                                     @PathVariable String title) {
         Command cmd = new Command(request);
         CommonResponse commonResponse = new CommonResponse();
         HttpStatus resp;
         List<String> actorNames;
 
-        if(movieRepository.existsMovieByMovieTitle(title)){
+        if (movieRepository.existsMovieByMovieTitle(title)) {
             actorNames = movieServiceImpl.getAllActorsInMovie(title);
             commonResponse.data = actorNames;
-            commonResponse.message ="All actors starring in: " + title;
+            commonResponse.message = "All actors starring in: " + title;
             resp = HttpStatus.OK;
         } else {
             commonResponse.data = null;
@@ -119,7 +120,7 @@ public class MovieController {
         return new ResponseEntity<>(commonResponse, resp);
     }
 
-    //Update characters in movie
+    //Update actors in movie, double actors are skipped
     @Operation(summary = "Update the actors in a movie")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "The actors have been updated",
@@ -128,15 +129,15 @@ public class MovieController {
             @ApiResponse(responseCode = "404", description = "Movie not found",
                     content = @Content)
     })
-    @PutMapping("/{id}/characters/update/")
-    public ResponseEntity<CommonResponse> updateCharactersInMovie(@Parameter(description = "id of the movie that needs to be updated")
-                                                                          HttpServletRequest request, @PathVariable Integer id,
-                                                                  @RequestBody Integer [] movieId){
+    @PutMapping("/{id}/actors/update/")
+    public ResponseEntity<CommonResponse> updateActorsInMovie(@Parameter(description = "id of the movie that needs to be searched")HttpServletRequest request,
+                                                              @PathVariable Integer id, @RequestBody Integer[] movieId) {
         Command cmd = new Command(request);
         CommonResponse commonResponse = new CommonResponse();
         HttpStatus resp;
 
-        if (movieRepository.existsById(id)) {commonResponse.data = movieServiceImpl.updateActorsInMovie(id, movieId);
+        if (movieRepository.existsById(id)) {
+            commonResponse.data = movieServiceImpl.updateActorsInMovie(id, movieId);
             commonResponse.message = "Actors in movie with id: " + id + " have been updated";
             resp = HttpStatus.OK;
         } else {
@@ -202,9 +203,7 @@ public class MovieController {
             resp = HttpStatus.BAD_REQUEST;
             commonResponse.message = "You can't update the movie id";
             return new ResponseEntity<>(commonResponse, resp);
-        } else
-        {
-            //TODO: deze check is eigenlijk niet nodig
+        } else {
             if (movieRepository.existsById(id)) {
                 Optional<Movie> movieRepo = movieRepository.findById(id);
                 returnMovie = movieRepo.get();
