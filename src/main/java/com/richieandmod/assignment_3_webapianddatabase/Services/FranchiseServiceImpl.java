@@ -34,15 +34,15 @@ public class FranchiseServiceImpl implements FranchiseService {
             contains = movies.stream().anyMatch(movie -> movie.id == id);
             if (!contains) {
                 if (movieRepository.existsById(id)) {
-                    Optional<Movie> movie = movieRepository.findById(id);
-                    movies.add(movie.orElse(null));
+                    Optional<Movie> movieRepo = movieRepository.findById(id);
+                    Movie movie = movieRepo.get();
+                    movie.franchise = franchise;
+                    movies.add(movie);
                 }
             }
         }
         franchise.setMovies(movies);
         franchiseRepository.save(franchise);
-
-
         return franchise.getMovies();
     }
 

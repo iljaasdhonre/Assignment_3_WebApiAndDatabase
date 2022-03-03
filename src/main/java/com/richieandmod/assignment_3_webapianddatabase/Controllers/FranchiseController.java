@@ -164,7 +164,7 @@ public class FranchiseController {
                     content = @Content)
     })
     //Update movies in franchise by its id
-    @PutMapping("/{id}/movies/update/")
+    @PutMapping("/{id}/movies/update")
     public ResponseEntity<CommonResponse> updateMoviesInFranchise(@Parameter(description = "id of the franchise that needs to be updated")
                                                                               HttpServletRequest request, @PathVariable Integer id,
                                                                   @RequestBody Integer[] franchiseId) {

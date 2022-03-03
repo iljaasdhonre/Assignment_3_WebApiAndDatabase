@@ -129,7 +129,7 @@ public class MovieController {
             @ApiResponse(responseCode = "404", description = "Movie not found",
                     content = @Content)
     })
-    @PutMapping("/{id}/actors/update/")
+    @PutMapping("/{id}/actors/update")
     public ResponseEntity<CommonResponse> updateActorsInMovie(@Parameter(description = "id of the movie that needs to be searched")HttpServletRequest request,
                                                               @PathVariable Integer id, @RequestBody Integer[] movieId) {
         Command cmd = new Command(request);
