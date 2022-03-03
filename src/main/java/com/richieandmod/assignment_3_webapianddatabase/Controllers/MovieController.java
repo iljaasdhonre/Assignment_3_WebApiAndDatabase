@@ -1,12 +1,17 @@
 package com.richieandmod.assignment_3_webapianddatabase.Controllers;
 
-import com.richieandmod.assignment_3_webapianddatabase.Models.Actor;
 import com.richieandmod.assignment_3_webapianddatabase.Models.CommonResponse;
 import com.richieandmod.assignment_3_webapianddatabase.Models.Movie;
 import com.richieandmod.assignment_3_webapianddatabase.Repositories.MovieRepository;
 import com.richieandmod.assignment_3_webapianddatabase.Services.MovieServiceImpl;
 import com.richieandmod.assignment_3_webapianddatabase.Utilities.Command;
 import com.richieandmod.assignment_3_webapianddatabase.Utilities.Logger;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/movies")
@@ -30,6 +33,12 @@ public class MovieController {
     private MovieServiceImpl movieServiceImpl;
 
     //Get all movies
+    @Operation(summary = "Get all movies that are present in db")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found all movies",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Movie.class))})
+    })
     @GetMapping("/all")
     public ResponseEntity<CommonResponse> getAllMovies(HttpServletRequest request) {
         Command cmd = new Command(request);
@@ -46,8 +55,17 @@ public class MovieController {
     }
 
     //Get movie by id
+    @Operation(summary = "Get a movie by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "One movie has been found",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Movie.class))}),
+            @ApiResponse(responseCode = "404", description = "Movie not found",
+                    content = @Content)
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<CommonResponse> getMovieById(HttpServletRequest request, @PathVariable Integer id) {
+    public ResponseEntity<CommonResponse> getMovieById(@Parameter(description = "id of the movie that needs to be searched")
+                                                                   HttpServletRequest request, @PathVariable Integer id) {
         Command cmd = new Command(request);
 
         CommonResponse commonResponse = new CommonResponse();
@@ -69,9 +87,17 @@ public class MovieController {
     }
 
     //Get all actors in a given movie by string
+    @Operation(summary = "Get all actors in a movie by movie title")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "The following actors are starring in this movie",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Movie.class))}),
+            @ApiResponse(responseCode = "404", description = "Movie not found",
+                    content = @Content)
+    })
     @GetMapping("/{title}/characters")
-    public ResponseEntity<CommonResponse> getAllCharactersInMovieByTitle(HttpServletRequest request,
-                                                                         @PathVariable String title){
+    public ResponseEntity<CommonResponse> getAllCharactersInMovieByTitle(@Parameter(description = "Title of the movie that needs to be found")
+                                                                                     HttpServletRequest request, @PathVariable String title){
         Command cmd = new Command(request);
         CommonResponse commonResponse = new CommonResponse();
         HttpStatus resp;
@@ -94,9 +120,18 @@ public class MovieController {
     }
 
     //Update characters in movie
+    @Operation(summary = "Update the actors in a movie")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "The actors have been updated",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Movie.class))}),
+            @ApiResponse(responseCode = "404", description = "Movie not found",
+                    content = @Content)
+    })
     @PutMapping("/{id}/characters/update/")
-    public ResponseEntity<CommonResponse> updateCharactersInMovie(HttpServletRequest request,
-                                                                  @PathVariable Integer id, @RequestBody Integer [] movieId){
+    public ResponseEntity<CommonResponse> updateCharactersInMovie(@Parameter(description = "id of the movie that needs to be updated")
+                                                                              HttpServletRequest request, @PathVariable Integer id,
+                                                                  @RequestBody Integer [] movieId){
         Command cmd = new Command(request);
         CommonResponse commonResponse = new CommonResponse();
         HttpStatus resp;
@@ -116,6 +151,12 @@ public class MovieController {
     }
 
     //Create movie and save to DB
+    @Operation(summary = "Create new movie")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created a new movie",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Movie.class))})
+    })
     @PostMapping("/create")
     public ResponseEntity<CommonResponse> createMovie(HttpServletRequest request, HttpServletResponse response,
                                                       @RequestBody Movie movie) {
@@ -137,8 +178,17 @@ public class MovieController {
     }
 
     //Update movie and save to DB
+    @Operation(summary = "Update the existing movie on id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "The movie has been updated",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Movie.class))}),
+            @ApiResponse(responseCode = "404", description = "Movie not found",
+                    content = @Content)
+    })
     @PutMapping("/update/{id}")
-    public ResponseEntity<CommonResponse> updateMovie(HttpServletRequest request, @RequestBody Movie movie,
+    public ResponseEntity<CommonResponse> updateMovie(@Parameter(description = "id of the movie that needs to be updated")
+                                                                  HttpServletRequest request, @RequestBody Movie movie,
                                                       @PathVariable Integer id) {
 
         Movie returnMovie;
@@ -188,8 +238,17 @@ public class MovieController {
     }
 
     //Delete movie
+    @Operation(summary = "Delete the movie on id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "The movie has been deleted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Movie.class))}),
+            @ApiResponse(responseCode = "404", description = "Movie not found",
+                    content = @Content)
+    })
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<CommonResponse> deleteMovie(HttpServletRequest request, @PathVariable Integer id) {
+    public ResponseEntity<CommonResponse> deleteMovie(@Parameter(description = "id of the movie that needs to be deleted")
+                                                                  HttpServletRequest request, @PathVariable Integer id) {
         Command cmd = new Command(request);
 
         CommonResponse commonResponse = new CommonResponse();
