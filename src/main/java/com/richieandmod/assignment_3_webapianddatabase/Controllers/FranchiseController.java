@@ -95,6 +95,7 @@ public class FranchiseController {
             @ApiResponse(responseCode = "404", description = "Franchise not found",
                     content = @Content)
     })
+    //Get all movies in a given franchise by its name
     @GetMapping("/{name}/movies")
     public ResponseEntity<CommonResponse> getAllMoviesInFranchiseByName(@Parameter(description = "name of the franchise that needs to be searched")
                                                                                     HttpServletRequest request, @PathVariable String name) {
@@ -127,6 +128,7 @@ public class FranchiseController {
             @ApiResponse(responseCode = "404", description = "Franchise not found",
                     content = @Content)
     })
+    //Get all actors in a given franchise by its name
     @GetMapping("/{name}/actors/all")
     public ResponseEntity<CommonResponse> getAllActorsInFranchise(@Parameter(description = "name of the franchise that needs to be searched")
                                                                               HttpServletRequest request, @PathVariable String name) {
@@ -161,6 +163,7 @@ public class FranchiseController {
             @ApiResponse(responseCode = "404", description = "Movie not found",
                     content = @Content)
     })
+    //Update movies in franchise by its id
     @PutMapping("/{id}/movies/update/")
     public ResponseEntity<CommonResponse> updateMoviesInFranchise(@Parameter(description = "id of the franchise that needs to be updated")
                                                                               HttpServletRequest request, @PathVariable Integer id,
