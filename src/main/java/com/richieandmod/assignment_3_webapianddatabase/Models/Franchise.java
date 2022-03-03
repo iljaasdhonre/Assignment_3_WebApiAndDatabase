@@ -25,7 +25,7 @@ public class Franchise {
 
     @OneToMany(mappedBy = "franchise", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    public List<Movie> movies = new ArrayList<>();
+    public List<Movie> movies = getMovies();
 
     @JsonGetter("movies")
     public List<String> getMoviesList() {
@@ -34,4 +34,8 @@ public class Franchise {
                     return "/api/movies/" + movie.id + ',' + movie.movieTitle;
                 }).collect(Collectors.toList());
     }
+
+    public List<Movie> getMovies() { return movies; }
+
+    public void setMovies(List<Movie> movies) { this.movies = movies; }
 }

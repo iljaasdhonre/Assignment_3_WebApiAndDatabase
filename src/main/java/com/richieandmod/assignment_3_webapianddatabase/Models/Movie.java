@@ -2,6 +2,8 @@ package com.richieandmod.assignment_3_webapianddatabase.Models;
 
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.Entity;
 import javax.persistence.*;
@@ -75,3 +77,4 @@ public class Movie {
         this.actors = actors;
     }
 }
+
