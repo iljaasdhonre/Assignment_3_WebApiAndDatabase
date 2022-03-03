@@ -65,7 +65,7 @@ public class MovieController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<CommonResponse> getMovieById(@Parameter(description = "id of the movie that needs to be searched")
-                                                                   HttpServletRequest request, @PathVariable Integer id) {
+                                                               HttpServletRequest request, @PathVariable Integer id) {
         Command cmd = new Command(request);
 
         CommonResponse commonResponse = new CommonResponse();
@@ -85,7 +85,7 @@ public class MovieController {
         Logger.getInstance().logCommand(cmd);
         return new ResponseEntity<>(commonResponse, resp);
     }
-  
+
     //Get all actors in a given movie by string
     @Operation(summary = "Get all actors in a movie by movie title")
     @ApiResponses(value = {
@@ -97,12 +97,7 @@ public class MovieController {
     })
     @GetMapping("/{title}/characters")
     public ResponseEntity<CommonResponse> getAllCharactersInMovieByTitle(@Parameter(description = "Title of the movie that needs to be found")
-                                                                                     HttpServletRequest request, @PathVariable String title){
-
-    //Get all actors in a given movie by its title
-    @GetMapping("/{title}/actors")
-    public ResponseEntity<CommonResponse> getAllActorsInMovieByTitle(HttpServletRequest request,
-                                                                         @PathVariable String title){
+                                                                                 HttpServletRequest request, @PathVariable String title){
         Command cmd = new Command(request);
         CommonResponse commonResponse = new CommonResponse();
         HttpStatus resp;
@@ -135,18 +130,13 @@ public class MovieController {
     })
     @PutMapping("/{id}/characters/update/")
     public ResponseEntity<CommonResponse> updateCharactersInMovie(@Parameter(description = "id of the movie that needs to be updated")
-                                                                              HttpServletRequest request, @PathVariable Integer id,
+                                                                          HttpServletRequest request, @PathVariable Integer id,
                                                                   @RequestBody Integer [] movieId){
-    //Update actors in movie, double actors are skipped
-    @PutMapping("/{id}/actors/update/")
-    public ResponseEntity<CommonResponse> updateActorsInMovie(HttpServletRequest request,
-                                                                  @PathVariable Integer id, @RequestBody Integer [] movieId){
         Command cmd = new Command(request);
         CommonResponse commonResponse = new CommonResponse();
         HttpStatus resp;
 
-        if (movieRepository.existsById(id)) {
-            commonResponse.data = movieServiceImpl.updateActorsInMovie(id, movieId);
+        if (movieRepository.existsById(id)) {commonResponse.data = movieServiceImpl.updateActorsInMovie(id, movieId);
             commonResponse.message = "Actors in movie with id: " + id + " have been updated";
             resp = HttpStatus.OK;
         } else {
@@ -198,7 +188,7 @@ public class MovieController {
     })
     @PutMapping("/update/{id}")
     public ResponseEntity<CommonResponse> updateMovie(@Parameter(description = "id of the movie that needs to be updated")
-                                                                  HttpServletRequest request, @RequestBody Movie movie,
+                                                              HttpServletRequest request, @RequestBody Movie movie,
                                                       @PathVariable Integer id) {
 
         Movie returnMovie;
@@ -214,6 +204,7 @@ public class MovieController {
             return new ResponseEntity<>(commonResponse, resp);
         } else
         {
+            //TODO: deze check is eigenlijk niet nodig
             if (movieRepository.existsById(id)) {
                 Optional<Movie> movieRepo = movieRepository.findById(id);
                 returnMovie = movieRepo.get();
@@ -230,7 +221,7 @@ public class MovieController {
                     returnMovie.releaseYear = movie.releaseYear;
                 }
 
-               returnMovie = movieRepository.save(returnMovie);
+                returnMovie = movieRepository.save(returnMovie);
 
                 commonResponse.data = returnMovie;
                 commonResponse.message = "Updated movie with id: " + returnMovie.id;
@@ -257,7 +248,7 @@ public class MovieController {
     })
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<CommonResponse> deleteMovie(@Parameter(description = "id of the movie that needs to be deleted")
-                                                                  HttpServletRequest request, @PathVariable Integer id) {
+                                                              HttpServletRequest request, @PathVariable Integer id) {
         Command cmd = new Command(request);
 
         CommonResponse commonResponse = new CommonResponse();
