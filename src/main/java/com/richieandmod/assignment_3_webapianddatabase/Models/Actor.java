@@ -47,10 +47,10 @@ public class Actor {
 
     //show relation and link to movie by id and title
     @JsonGetter("movies")
-    public List<String> getMovies(){
+    public List<String> getMoviesList() {
         return movies.stream()
                 .map(movie -> {
-                    return "/api/movies/" + movie.id + ',' + movie.movieTitle;
+                    return "/api/movies/" + movie.id;
                 }).collect(Collectors.toList());
     }
 }

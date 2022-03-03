@@ -24,7 +24,8 @@ public class MovieServiceImpl implements MovieService {
     //Update actors in a movie with given id. If actors already exist in movie do nothing
     @Override
     public List<Actor> updateActorsInMovie(Integer movieId, Integer[] actorIds) {
-        Movie movie = movieRepository.getById(movieId);
+        Optional<Movie> repoMovie = movieRepository.findById(movieId);
+        Movie movie = repoMovie.orElseThrow();
         List<Actor> actors = movie.getActors();
         boolean contains;
 

@@ -25,7 +25,8 @@ public class FranchiseServiceImpl implements FranchiseService {
     //Update movies in a franchise with given id. If the movie already exists in a franchise do nothing
     @Override
     public List<Movie> updateMoviesInFranchise(Integer franchiseId, Integer[] moviesIds) {
-        Franchise franchise = franchiseRepository.getById(franchiseId);
+        Optional<Franchise> repoFranchise = franchiseRepository.findById(franchiseId);
+        Franchise franchise = repoFranchise.orElseThrow();
         List<Movie> movies = franchise.getMovies();
         boolean contains;
 
@@ -33,13 +34,14 @@ public class FranchiseServiceImpl implements FranchiseService {
             contains = movies.stream().anyMatch(movie -> movie.id == id);
             if (!contains) {
                 if (movieRepository.existsById(id)) {
-                    Optional<Movie> movie = movieRepository.findById(id);
-                    movies.add(movie.orElse(null));
+                    Optional<Movie> movieRepo = movieRepository.findById(id);
+                    Movie movie = movieRepo.get();
+                    movie.franchise = franchise;
+                    movies.add(movie);
                 }
             }
         }
         franchise.setMovies(movies);
-
         franchiseRepository.save(franchise);
         return franchise.getMovies();
     }
