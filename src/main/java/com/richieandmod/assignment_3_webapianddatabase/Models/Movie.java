@@ -8,6 +8,8 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.Entity;
 import javax.persistence.*;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,18 +23,26 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
 
+    @NotBlank
+    @Size(max = 50)
     @Column(nullable = false, length = 50)
     public String movieTitle;
 
+    @NotBlank
+    @Size(max = 50)
     @Column(nullable = false, length = 50)
     public String genre;
 
+    @NotBlank
+    @Size(max = 4)
     @Column(nullable = false)
     public Integer releaseYear;
 
+    @Size(max = 200)
     @Column(length = 200)
     public String picture;
 
+    @Size(max = 200)
     @Column(length = 200)
     public String trailer;
 

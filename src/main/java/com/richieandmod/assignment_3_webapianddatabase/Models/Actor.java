@@ -3,6 +3,8 @@ package com.richieandmod.assignment_3_webapianddatabase.Models;
 import com.fasterxml.jackson.annotation.JsonGetter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,16 +18,21 @@ public class Actor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
 
+    @NotBlank
+    @Size(max = 50)
     @Column(nullable = false, length = 50)
     public String name;
 
+    @Size(max = 50)
     @Column(length = 50)
     public String alias;
 
+    @NotBlank
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     public Gender gender;
 
+    @Size(max = 200)
     @Column(length = 200)
     public String picture;
 

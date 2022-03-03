@@ -5,6 +5,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,9 +20,12 @@ public class Franchise {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
 
+    @NotBlank
+    @Size(max = 50)
     @Column(nullable = false, length = 50)
     public String name;
 
+    @Size(max = 600)
     @Column(length = 600)
     public String description;
 
