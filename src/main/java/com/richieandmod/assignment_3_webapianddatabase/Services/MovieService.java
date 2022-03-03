@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface MovieService {
     List<Actor> updateActorsInMovie(Integer movieId, Integer [] actorIds);
+    List<String> getAllActorsInMovie(String movieTitle);
 }
