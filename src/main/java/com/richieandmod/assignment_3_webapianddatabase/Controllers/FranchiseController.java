@@ -44,6 +44,7 @@ public class FranchiseController {
     }
 
     //Get franchise by id
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @GetMapping("/{id}")
     public ResponseEntity<CommonResponse> getFranchiseById(HttpServletRequest request, @PathVariable Integer id) {
         Command cmd = new Command(request);
@@ -67,6 +68,7 @@ public class FranchiseController {
     }
 
     //Get all movies in a given franchise by its name
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @GetMapping("/{name}/movies")
     public ResponseEntity<CommonResponse> getAllMoviesInFranchiseByTitle(HttpServletRequest request,
                                                                          @PathVariable String name) {
@@ -92,6 +94,7 @@ public class FranchiseController {
     }
 
     //Get all actors in a given franchise by its name
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @GetMapping("/{name}/actors/all")
     public ResponseEntity<CommonResponse> getAllActorsInFranchise(HttpServletRequest request,
                                                                   @PathVariable String name) {
@@ -118,6 +121,7 @@ public class FranchiseController {
 
 
     //Update movies in franchise by its id
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @PutMapping("/{id}/movies/update/")
     public ResponseEntity<CommonResponse> updateMoviesInFranchise(HttpServletRequest request,
                                                                   @PathVariable Integer id, @RequestBody Integer[] franchiseId) {
@@ -141,6 +145,7 @@ public class FranchiseController {
     }
 
     //Create franchise and save to DB
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
     public ResponseEntity<CommonResponse> createFranchise(HttpServletRequest request, HttpServletResponse response,
                                                           @RequestBody Franchise franchise) {
@@ -162,6 +167,7 @@ public class FranchiseController {
     }
 
     //Update existing franchise by id
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @PutMapping("/update/{id}")
     public ResponseEntity<CommonResponse> updateFranchise(HttpServletRequest request, @PathVariable Integer id,
                                                           @RequestBody Franchise newFranchise) {
@@ -199,6 +205,7 @@ public class FranchiseController {
     }
 
     //Delete franchise by id
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<CommonResponse> deleteFranchise(HttpServletRequest request, @PathVariable Integer id) {
         Command cmd = new Command(request);

@@ -39,6 +39,7 @@ public class ActorController {
     }
 
     //Get actor by id
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @GetMapping("/{id}")
     public ResponseEntity<CommonResponse> getActorById(HttpServletRequest request, @PathVariable Integer id) {
         Command cmd = new Command(request);
@@ -63,6 +64,7 @@ public class ActorController {
 
 
     //Create actor and save in DB
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
     public ResponseEntity<CommonResponse> createActor(HttpServletRequest request, HttpServletResponse response,
                                                       @RequestBody Actor actor) {
@@ -84,6 +86,7 @@ public class ActorController {
     }
 
     //Update existing actor
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @PutMapping("/update/{id}")
     public ResponseEntity<CommonResponse> updateActor(HttpServletRequest request, @PathVariable Integer id,
                                              @RequestBody Actor newActor) {
@@ -130,6 +133,7 @@ public class ActorController {
     }
 
     //Delete actor
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<CommonResponse> deleteActor(HttpServletRequest request, @PathVariable Integer id) {
         Command cmd = new Command(request);

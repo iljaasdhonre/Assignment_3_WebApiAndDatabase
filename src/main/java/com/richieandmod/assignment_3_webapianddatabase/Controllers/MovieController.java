@@ -43,6 +43,7 @@ public class MovieController {
     }
 
     //Get movie by id
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @GetMapping("/{id}")
     public ResponseEntity<CommonResponse> getMovieById(HttpServletRequest request, @PathVariable Integer id) {
         Command cmd = new Command(request);
@@ -66,6 +67,7 @@ public class MovieController {
     }
 
     //Get all actors in a given movie by its title
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @GetMapping("/{title}/actors")
     public ResponseEntity<CommonResponse> getAllActorsInMovieByTitle(HttpServletRequest request,
                                                                          @PathVariable String title){
@@ -91,6 +93,7 @@ public class MovieController {
     }
 
     //Update actors in movie, double actors are skipped
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @PutMapping("/{id}/actors/update/")
     public ResponseEntity<CommonResponse> updateActorsInMovie(HttpServletRequest request,
                                                                   @PathVariable Integer id, @RequestBody Integer [] movieId){
@@ -114,6 +117,7 @@ public class MovieController {
     }
 
     //Create movie and save to DB
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
     public ResponseEntity<CommonResponse> createMovie(HttpServletRequest request, HttpServletResponse response,
                                                       @RequestBody Movie movie) {
@@ -135,6 +139,7 @@ public class MovieController {
     }
 
     //Update movie and save to DB
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @PutMapping("/update/{id}")
     public ResponseEntity<CommonResponse> updateMovie(HttpServletRequest request, @RequestBody Movie movie,
                                                       @PathVariable Integer id) {
@@ -185,6 +190,7 @@ public class MovieController {
     }
 
     //Delete movie
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<CommonResponse> deleteMovie(HttpServletRequest request, @PathVariable Integer id) {
         Command cmd = new Command(request);
