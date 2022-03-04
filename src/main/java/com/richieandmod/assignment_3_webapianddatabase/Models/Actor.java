@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "actor")
+@Table
 public class Actor {
 
     //fields
@@ -49,8 +49,6 @@ public class Actor {
     @JsonGetter("movies")
     public List<String> getMoviesList() {
         return movies.stream()
-                .map(movie -> {
-                    return "/api/movies/" + movie.id;
-                }).collect(Collectors.toList());
+                .map(movie -> "/api/movies/" + movie.id).collect(Collectors.toList());
     }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "movie")
+@Table
 public class Movie {
 
     //fields
@@ -78,9 +78,7 @@ public class Movie {
     @JsonGetter("actors")
     public List<String> getActorsList() {
         return actors.stream()
-                .map(actor -> {
-                    return "/api/actors/" + actor.id;
-                }).collect(Collectors.toList());
+                .map(actor -> "/api/actors/" + actor.id).collect(Collectors.toList());
     }
 
     //getters and setters

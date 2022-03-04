@@ -26,11 +26,15 @@ import java.util.Optional;
 @RequestMapping("/api/movies")
 public class MovieController {
 
-    @Autowired
-    private MovieRepository movieRepository;
+    //Fields
+    private final MovieRepository movieRepository;
+    private final MovieServiceImpl movieServiceImpl;
 
-    @Autowired
-    private MovieServiceImpl movieServiceImpl;
+    //Constructor
+    public MovieController(MovieRepository movieRepository, MovieServiceImpl movieServiceImpl) {
+        this.movieRepository = movieRepository;
+        this.movieServiceImpl = movieServiceImpl;
+    }
 
     //Get all movies
     @Operation(summary = "Get all movies that are present in db")
