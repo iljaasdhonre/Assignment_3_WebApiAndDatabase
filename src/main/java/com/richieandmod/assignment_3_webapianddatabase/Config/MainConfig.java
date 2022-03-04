@@ -1,25 +1,33 @@
 package com.richieandmod.assignment_3_webapianddatabase.Config;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 
 @Configuration
 public class MainConfig {
+    @Value("#{systemEnvironment['DATABASE_URL']}")
+    String databaseUrl;
 
     @Bean
     public BasicDataSource dataSource() throws URISyntaxException {
-//        String dbUrl = System.getenv("postgresql://localhost:5432/moviedb?currentSchema=public");
-//        String username = System.getenv("postgres");
-//        String password = System.getenv("supersecretpassword");
+        URI databaseUri = new URI(databaseUrl);
+        String[] creds = databaseUri.getUserInfo().split(":");
+        String url = String.format("jdbc:postgresql://%s:%s%s?sslmode=require&user=%s&password=%s",
+                databaseUri.getHost(),
+                databaseUri.getPort(),
+                databaseUri.getPath(),
+                creds[0],
+                creds[1]);
 
-        BasicDataSource basicDataSource = new BasicDataSource();
-        basicDataSource.setUrl("jdbc:postgresql://localhost:5432/moviedb?currentSchema=public");
-        basicDataSource.setUsername("postgres");
-        basicDataSource.setPassword("supersecretpassword");
+        BasicDataSource source = new BasicDataSource();
+        source.setUrl(url);
 
-        return basicDataSource;
+        return source;
+
     }
 }
