@@ -7,6 +7,33 @@ This project was an assignment with the end-goal being to create and deploy a RE
 For this assignment we were required to make an app using Spring in Java with different dependencies mentioned in "Built With".
 The database is build from the ground up using PostgreSQL and implements seeder data on application start. We used Java to create a REST API and documented it with Swagger and Postman.
 
+## Installation
+
+### Online with Heroku
+You can access the api by clicking on this link {link to heroku}.
+
+### Local
+
+Requirements:
+ - IntelliJ or similar IDE
+ - Docker
+ - Postman (optional)
+
+1. Download or clone repository to a local folder.
+2. Start up Docker 
+3. Run the following command in a terminal
+
+```bash
+docker run -d --name moviesdb -e POSTGRES_PASSWORD=supersecretpassword -e POSTGRES_DB=moviedb -p 5432:5432 postgres:14-alpine
+```
+
+4. Open the downloaded or cloned repository in your IDE
+5. Run the app
+6. Navigate to http://localhost:8080/swagger-ui/index.html#
+7. Alternative to 6: 
+Import the Assignment3_WebApi_And_Database.postman_collection.json from the resources folder in Postman
+8. Start testing the endpoints
+
 ## How To Use
 
 ### Entity information
