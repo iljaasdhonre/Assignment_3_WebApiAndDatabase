@@ -11,14 +11,14 @@ public class MainConfig {
 
     @Bean
     public BasicDataSource dataSource() throws URISyntaxException {
-        String dbUrl = System.getenv("DATABASE_URL");
-        String username = System.getenv("POSTGRES_USERNAME");
-        String password = System.getenv("POSTGRES_PASSWORD");
+//        String dbUrl = System.getenv("postgresql://localhost:5432/moviedb?currentSchema=public");
+//        String username = System.getenv("postgres");
+//        String password = System.getenv("supersecretpassword");
 
         BasicDataSource basicDataSource = new BasicDataSource();
-        basicDataSource.setUrl(dbUrl);
-        basicDataSource.setUsername(username);
-        basicDataSource.setPassword(password);
+        basicDataSource.setUrl("jdbc:postgresql://localhost:5432/moviedb?currentSchema=public");
+        basicDataSource.setUsername("postgres");
+        basicDataSource.setPassword("supersecretpassword");
 
         return basicDataSource;
     }

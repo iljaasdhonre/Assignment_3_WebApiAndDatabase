@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,11 +25,15 @@ import java.util.Optional;
 @RequestMapping("/api/franchises")
 public class FranchiseController {
 
-    @Autowired
-    FranchiseRepository franchiseRepository;
+    //Fields
+    private final FranchiseRepository franchiseRepository;
+    private final FranchiseServiceImpl franchiseServiceImpl;
 
-    @Autowired
-    private FranchiseServiceImpl franchiseServiceImpl;
+    //Constructor
+    public FranchiseController(FranchiseRepository franchiseRepository, FranchiseServiceImpl franchiseServiceImpl) {
+        this.franchiseRepository = franchiseRepository;
+        this.franchiseServiceImpl = franchiseServiceImpl;
+    }
 
     //Get all franchises
     @Operation(summary = "Get all franchises that are present in db")
