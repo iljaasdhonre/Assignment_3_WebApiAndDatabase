@@ -1,5 +1,5 @@
 # Create a Web API and database with Spring
-[![web](https://img.shields.io/static/v1?logo=heroku&message=Online&label=Heroku&color=430098)](https://chinook-assignment-database.herokuapp.com/home)
+[![web](https://img.shields.io/static/v1?logo=heroku&message=Online&label=Heroku&color=430098)](https://spring-web-api-assignment.herokuapp.com/swagger-ui/index.html)
 
 This project was an assignment with the end-goal being to create and deploy a REST Web API and PostgreSQL database with Spring in Heroku.
 

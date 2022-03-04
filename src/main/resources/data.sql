@@ -43,7 +43,6 @@ INSERT INTO actor_movie SELECT 1, 5;
 INSERT INTO actor_movie SELECT 2, 2;
 INSERT INTO actor_movie SELECT 2, 6;
 INSERT INTO actor_movie SELECT 2, 7;
-INSERT INTO actor_movie SELECT 3, 16;
 INSERT INTO actor_movie SELECT 4, 1;
 INSERT INTO actor_movie SELECT 4, 2;
 INSERT INTO actor_movie SELECT 4, 3;
